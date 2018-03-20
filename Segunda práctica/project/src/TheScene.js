@@ -11,11 +11,10 @@ class TheScene extends THREE.Scene {
     // Attributes
     
     this.ambientLight = null;
-    this.spotLight = null;
-    this.spotLight2 = null; // * New light 
+    // this.spotLight = null;
     this.camera = null;
     this.trackballControls = null;
-    this.crane = null;
+    this.robot = null;
     this.ground = null;
   
     this.createLights ();
@@ -32,7 +31,7 @@ class TheScene extends THREE.Scene {
    */
   createCamera (renderer) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set (60, 30, 60);
+    this.camera.position.set (150, 30, 150);
     var look = new THREE.Vector3 (0,20,0);
     this.camera.lookAt(look);
 
@@ -51,6 +50,7 @@ class TheScene extends THREE.Scene {
     this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
     this.add (this.ambientLight);
     
+    /*
     // add spotlight for the shadows
     this.spotLight = new THREE.SpotLight( 0xffffff );
     this.spotLight.position.set( 60, 60, 40 );
@@ -59,16 +59,7 @@ class TheScene extends THREE.Scene {
     this.spotLight.shadow.mapSize.width=2048
     this.spotLight.shadow.mapSize.height=2048;
     this.add (this.spotLight);
-
-    //* Create a new light
-    // add spotlight for the shadows
-    this.spotLight2 = new THREE.SpotLight( 0xffffff );
-    this.spotLight2.position.set( 20, 30, 40 );
-    this.spotLight2.castShadow = true;
-    // the shadow resolution
-    this.spotLight2.shadow.mapSize.width=2048
-    this.spotLight2.shadow.mapSize.height=2048;
-    this.add (this.spotLight2);
+    */
   }
   
   /// It creates the geometric model: crane and ground
@@ -78,88 +69,74 @@ class TheScene extends THREE.Scene {
   createModel () {
     var model = new THREE.Object3D()
     var loader = new THREE.TextureLoader();
-    var textura = loader.load ("imgs/wood.jpg");
-    this.crane = new Crane({material: new THREE.MeshPhongMaterial ({color: 0xff0000, specular: 0xfbf804, shininess: 70})});
+    var textura = loader.load ('../img/iron.jpg');
+    //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({color: 0xff0000, specular: 0xfbf804, shininess: 70})});
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: textura})});
-    model.add (this.crane);
+    //model.add (this.crane);
     this.ground = new Ground (300, 300, new THREE.MeshPhongMaterial ({map: textura}), 4);
     model.add (this.ground);
     return model;
   }
   
-  // Public methods
+  // // Public methods
 
-  /// It adds a new box, or finish the action
-  /**
-   * @param event - Mouse information
-   * @param action - Which action is requested to be processed: start adding or finish.
-   */
-  addBox (event, action) {
-    this.ground.addBox(event, action);
-  }
+  // /// It adds a new box, or finish the action
+  // /**
+  //  * @param event - Mouse information
+  //  * @param action - Which action is requested to be processed: start adding or finish.
+  //  */
+  // addBox (event, action) {
+  //   this.ground.addBox(event, action);
+  // }
   
-  /// It moves or rotates a box on the ground
-  /**
-   * @param event - Mouse information
-   * @param action - Which action is requested to be processed: select a box, move it, rotate it or finish the action.
-   */
-  moveBox (event, action) {
-    this.ground.moveBox (event, action);
-  }
+  // /// It moves or rotates a box on the ground
+  // /**
+  //  * @param event - Mouse information
+  //  * @param action - Which action is requested to be processed: select a box, move it, rotate it or finish the action.
+  //  */
+  // moveBox (event, action) {
+  //   this.ground.moveBox (event, action);
+  // }
   
-  //! It deletes a box
-  /**
-   * @param event - Mouse information
-   * @param action - Which action is requested to be processed: select a box or finish the action.
-   */
-  removeBox (event, action) {
-    this.ground.removeBox (event, action);
-  }
+  // //! It deletes a box
+  // /**
+  //  * @param event - Mouse information
+  //  * @param action - Which action is requested to be processed: select a box or finish the action.
+  //  */
+  // removeBox (event, action) {
+  //   this.ground.removeBox (event, action);
+  // }
 
-  /// The crane can take a box
-  /**
-   * @return The new height of the hook, on the top of the taken box. Zero if no box is taken
-   */
-  takeBox () { 
-    var box = this.ground.takeBox (this.crane.getHookPosition());
-    if (box === null)
-      return 0; 
-    else 
-      return this.crane.takeBox (box); 
-    // The retuned height set the new limit to down the hook
-  }
+  // /// The crane can take a box
+  // /**
+  //  * @return The new height of the hook, on the top of the taken box. Zero if no box is taken
+  //  */
+  // takeBox () { 
+  //   var box = this.ground.takeBox (this.crane.getHookPosition());
+  //   if (box === null)
+  //     return 0; 
+  //   else 
+  //     return this.crane.takeBox (box); 
+  //   // The retuned height set the new limit to down the hook
+  // }
   
-  /// The crane drops its taken box
-  dropBox () {
-    var box = this.crane.dropBox ();
-    if (box !== null) {
-      box.position.copy (this.crane.getHookPosition());
-      box.position.y = 0;
-      this.ground.dropBox (box);
-    }
-  }
+  // /// The crane drops its taken box
+  // dropBox () {
+  //   var box = this.crane.dropBox ();
+  //   if (box !== null) {
+  //     box.position.copy (this.crane.getHookPosition());
+  //     box.position.y = 0;
+  //     this.ground.dropBox (box);
+  //   }
+  // }
   
+
   /// It sets the crane position according to the GUI
   /**
    * @controls - The GUI information
    */
   animate (controls) {
     this.axis.visible = controls.axis;
-    if(controls.light1){
-      this.spotLight.intensity = controls.lightIntensity;
-    } else {
-      this.spotLight.intensity = 0;
-    }
-    if(controls.light2){
-      this.spotLight2.intensity = controls.lightIntensity2;
-    } else {
-      this.spotLight2.intensity = 0;
-    }
-    if (controls.transform)
-      this.crane.setHookPosition (controls.rotation, controls.distance, controls.height);
-
-    if (controls.takeBox && controls.height > 20)
-      this.dropBox();
   }
   
   /// It returns the camera
