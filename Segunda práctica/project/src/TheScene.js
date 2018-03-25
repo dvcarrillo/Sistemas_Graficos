@@ -11,7 +11,7 @@ class TheScene extends THREE.Scene {
     // Attributes
     
     this.ambientLight = null;
-    // this.spotLight = null;
+    this.spotLight = null;
     this.camera = null;
     this.trackballControls = null;
     this.robot = null;
@@ -50,7 +50,6 @@ class TheScene extends THREE.Scene {
     this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
     this.add (this.ambientLight);
     
-    /*
     // add spotlight for the shadows
     this.spotLight = new THREE.SpotLight( 0xffffff );
     this.spotLight.position.set( 60, 60, 40 );
@@ -59,7 +58,6 @@ class TheScene extends THREE.Scene {
     this.spotLight.shadow.mapSize.width=2048
     this.spotLight.shadow.mapSize.height=2048;
     this.add (this.spotLight);
-    */
   }
   
   /// It creates the geometric model: crane and ground
@@ -73,6 +71,8 @@ class TheScene extends THREE.Scene {
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({color: 0xff0000, specular: 0xfbf804, shininess: 70})});
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: textura})});
     //model.add (this.crane);
+    this.robot = new Robot({});
+    model.add(this.robot);
     this.ground = new Ground (300, 300, new THREE.MeshPhongMaterial ({map: textura}), 4);
     model.add (this.ground);
     return model;
@@ -131,7 +131,7 @@ class TheScene extends THREE.Scene {
   // }
   
 
-  /// It sets the crane position according to the GUI
+  /// It sets the robot position according to the GUI
   /**
    * @controls - The GUI information
    */

@@ -1,6 +1,7 @@
-
-// Robot class
 /**
+ * Robot class
+ * Represents a R2D2-like figure in the scene
+ * 
  * @author David Vargas, Andres Molina
  * 
  * @param parameters = {
@@ -59,10 +60,26 @@ class Robot extends THREE.Object3D {
         this.body = null;
 
         this.body = this.createBody();
+        /* this.legs = null; */
+
+        this.add(this.body);
     }
 
     /*** PRIVATE METHODS ***/
+    /** Creates the body of the robot
+     * 
+     * @author David Vargas Carrillo
+     */
     createBody () {
-        console.log("hello");
+        var precision = 30;                         // Number of radial segments
+        var bodyWidth = this.bodyHeight * 0.5;      // Width set to be 50% of the height
+        // Creates the base cylinder
+        var bodyGeometry = new THREE.CylinderGeometry(bodyWidth / 2, bodyWidth / 2, this.bodyHeight, precision, 1, false)
+        var body = new THREE.Mesh(bodyGeometry, this.material);
+        // Positions the body over the axis
+        body.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.bodyHeight/2, 0));
+        body.castShadow = true;
+        // body.add(this.createHead());
+        return body;
     }
 }
