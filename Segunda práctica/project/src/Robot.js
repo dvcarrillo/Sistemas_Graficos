@@ -31,7 +31,7 @@ class Robot extends THREE.Object3D {
          */
         this.legHeight = this.robotHeight * 0.7619;
         this.bodyHeight = this.robotHeight * 0.6667;
-        this.headHeight = this.robotHeight * 0.1428;
+        this.headDiameter = this.robotHeight * 0.1428;
 
         // Robot movement properties
         this.MAX_HEAD_ANGLE = 80;
@@ -79,7 +79,24 @@ class Robot extends THREE.Object3D {
         // Positions the body over the axis
         body.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.bodyHeight/2, 0));
         body.castShadow = true;
-        // body.add(this.createHead());
+        body.add(this.createHead());
         return body;
+    }
+
+    /**
+     * Creates the head of the robot
+     * 
+     * @author David Vargas Carrillo
+     */
+    createHead() {
+        var precision = 30;                         // Number of radial segments
+        // Creates the base sphere
+        var headGeometry = new THREE.SphereGeometry(this.headDiameter, precision, precision, 0, 6.3, 0, 2);
+        var head = new THREE.Mesh(headGeometry, this.material);
+        // Positions the head over the body
+        head.castShadow = true;
+        head.position.y = this.bodyHeight;
+        // head.add(this.createEye());
+        return head;
     }
 }
