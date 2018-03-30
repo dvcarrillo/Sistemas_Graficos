@@ -31,7 +31,7 @@ class Robot extends THREE.Object3D {
          */
         this.legHeight = this.robotHeight * 0.7619;
         this.bodyHeight = this.robotHeight * 0.6667;
-        this.headDiameter = this.robotHeight * 0.1428;
+        this.headRadius = this.robotHeight * 0.1428;
 
         // Robot movement properties
         this.MAX_HEAD_ANGLE = 80;
@@ -71,10 +71,10 @@ class Robot extends THREE.Object3D {
      * @author David Vargas Carrillo
      */
     createBody () {
-        var precision = 30;                         // Number of radial segments
-        var bodyWidth = this.bodyHeight * 0.5;      // Width set to be 50% of the height
+        var precision = 30;                              // Number of radial segments
+        var bodyRadius = this.bodyHeight * 0.5 * 0.5;    // Width set to be 50% of the height
         // Creates the base cylinder
-        var bodyGeometry = new THREE.CylinderGeometry(bodyWidth / 2, bodyWidth / 2, this.bodyHeight, precision, 1, false)
+        var bodyGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, this.bodyHeight, precision, 1, false)
         var body = new THREE.Mesh(bodyGeometry, this.material);
         // Positions the body over the axis
         body.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.bodyHeight/2, 0));
@@ -91,12 +91,33 @@ class Robot extends THREE.Object3D {
     createHead() {
         var precision = 30;                         // Number of radial segments
         // Creates the base sphere
-        var headGeometry = new THREE.SphereGeometry(this.headDiameter, precision, precision, 0, 6.3, 0, 2);
+        var headGeometry = new THREE.SphereGeometry(this.headRadius, precision, precision, 0, 6.3, 0, 2);
         var head = new THREE.Mesh(headGeometry, this.material);
         // Positions the head over the body
         head.castShadow = true;
         head.position.y = this.bodyHeight;
-        // head.add(this.createEye());
+        head.add(this.createEye());
         return head;
     }
+
+    /**
+     * Creates the eye of the robot
+     * 
+     * @author David Vargas Carrillo
+     */
+    createEye() {
+        var precision = 30;                         // Number of radial segments
+        var eyeRadius = this.headRadius * 0.33;     // Eye is the 33% of the head
+        var eyeHeight = eyeRadius / 2;
+        // Creates the base sphere
+        var eyeGeometry = new THREE.CylinderGeometry(eyeRadius, eyeRadius, eyeHeight, precision, precision);
+        var eye = new THREE.Mesh(eyeGeometry, this.material);
+        // Positions the eye in the head
+        eye.castShadow = true;
+        eye.rotation.x += 45;
+        eye.position.y += 2.6;
+        eye.position.z += 3.3;
+        return eye;
+    }
+
 }
