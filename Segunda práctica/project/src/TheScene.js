@@ -137,6 +137,9 @@ class TheScene extends THREE.Scene {
    */
   animate (controls) {
     this.axis.visible = controls.axis;
+    this.robot.setHeadRotation(controls.rotationHead);
+    this.robot.setBodyRotation(controls.rotationBody);
+    this.robot.setLegsScale(controls.scaleLegs);
   }
   
   /// It returns the camera
