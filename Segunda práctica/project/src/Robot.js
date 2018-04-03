@@ -68,10 +68,7 @@ class Robot extends THREE.Object3D {
     }
 
     /*** PRIVATE METHODS ***/
-    /** Creates the body of the robot
-     * 
-     * @author David Vargas Carrillo
-     */
+    // Creates the body of the robot
     createBody() {
         var precision = 30;                              // Number of radial segments
         var bodyRadius = this.bodyWidth * 0.5;
@@ -87,11 +84,8 @@ class Robot extends THREE.Object3D {
         return body;
     }
 
-    /**
-     * Creates the head of the robot
-     * 
-     * @author David Vargas Carrillo
-     */
+    
+    // Creates the head of the robot
     createHead(translation) {
         var precision = 30;                         // Number of radial segments
         // Creates the base sphere
@@ -104,11 +98,7 @@ class Robot extends THREE.Object3D {
         return head;
     }
 
-    /**
-     * Creates the eye of the robot
-     * 
-     * @author David Vargas Carrillo
-     */
+    // Creates the eye of the robot
     createEye() {
         var precision = 30;                         // Number of radial segments
         var eyeRadius = this.headRadius * 0.25;     // Eye is the 25% of the head
@@ -124,11 +114,7 @@ class Robot extends THREE.Object3D {
         return eye;
     }
 
-    /**
-     * Creates a leg of the robot
-     * 
-     * @author David Vargas Carrillo, Andres Molina Lopez
-     */
+    // Creates a leg of the robot
     createLeg(sign) {
         let precision = 30;
         let legLength = this.currentLength;
@@ -146,11 +132,7 @@ class Robot extends THREE.Object3D {
         return leg;
     }
 
-    /**
-     * Creates a feet of the robot
-     * 
-     * @author Andres Molina Lopez
-     */
+    // Creates a feet of the robot
     createFeet() {
         let precision = 30;
         let feetHeight = this.legHeight * 0.125;
@@ -165,11 +147,7 @@ class Robot extends THREE.Object3D {
         return feet;
     }
 
-    /**
-     * Creates a shoulder of the robot
-     * 
-     * @author Andres Molina Lopez
-     */
+    // Creates a shoulder of the robot
     createShoulder() {
         let shoulderDimensions = this.legHeight * 0.125;
         let shoulderGeometry = new THREE.BoxGeometry(shoulderDimensions, shoulderDimensions, shoulderDimensions);
