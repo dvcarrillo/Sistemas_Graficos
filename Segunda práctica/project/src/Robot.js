@@ -17,8 +17,8 @@ class Robot extends THREE.Object3D {
         super();
 
         // If no parameters are specified, use default values
-        this.robotHeight = (parameters.robotHeight === undefined ? 30 : parameters.robotHeight);
-        this.robotWidth = (parameters.robotWidth === undefined ? 45 : parameters.robotWidth);
+        this.robotHeight = (parameters.robotHeight === undefined ? 21 : parameters.robotHeight);
+        this.robotWidth = (parameters.robotWidth === undefined ? 12.5 : parameters.robotWidth);
         this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({ color: 0xcaccce, specular: 0xbac3d6, shininess: 70 }) : parameters.material);
 
         // Calculates the height of different parts
@@ -31,6 +31,7 @@ class Robot extends THREE.Object3D {
          */
         this.legHeight = this.robotHeight * 0.7619;
         this.bodyHeight = this.robotHeight * 0.6667;
+        this.bodyWidth = this.bodyHeight * 0.5;
         this.headRadius = this.robotHeight * 0.1428;
 
         // Robot movement properties
@@ -38,11 +39,18 @@ class Robot extends THREE.Object3D {
         this.MIN_HEAD_ANGLE = -80;
         this.MAX_BODY_ANGLE = 30;
         this.MIN_BODY_ANGLE = -45;
-        this.MAX_LEG_LENGTH = this.legHeight * 1.2;  // 20% of their normal length 
-        // this.MIN_LEG_LENGTH = this.legHeight;
-        this.headAngle = 1;
-        this.bodyAngle = 1;
-        this.legLength = this.legHeight;
+        this.MAX_LEG_LENGTH = this.legHeight * 0.75 * 1.2;  // 20% of their normal length 
+        this.MIN_LEG_LENGTH = this.legHeight * 0.75;
+        this.currentLength = parameters.extra === undefined ? this.MIN_LEG_LENGTH : parameters.extra;
+
+        if (this.currentLength > this.MAX_LEG_LENGTH) {
+            this.currentLength = this.MAX_LEG_LENGTH;
+        } else if (this.currentLength < this.MIN_LEG_LENGTH) {
+            this.currentLength = this.MIN_LEG_LENGTH;
+        }
+
+        this.currentHeadAngle = 0;
+        this.currentHodyAngle = 0;
 
         // Robot movement in the world (needed for later)
         // this.posX = 0;
@@ -50,19 +58,13 @@ class Robot extends THREE.Object3D {
         // this.movSpeed = 1;
 
         // Objects that compose the robot
-        /**
-         * Nota: se podrian usar solo tres clases, y que por ejemplo en la de head
-         * se generen todos los objetos que componen la cabeza porque todos se van
-         * a generar siguiendo el mismo tamaño. Lo mismo con las otras dos
-         */
-        this.head = null;
-        this.legs = null;
-        this.body = null;
-
         this.body = this.createBody();
-        /* this.legs = null; */
+        this.rightLeg = this.createLeg(-1);
+        this.leftLeg = this.createLeg(1);
 
         this.add(this.body);
+        this.add(this.rightLeg);
+        this.add(this.leftLeg);
     }
 
     /*** PRIVATE METHODS ***/
@@ -70,18 +72,18 @@ class Robot extends THREE.Object3D {
      * 
      * @author David Vargas Carrillo
      */
-    createBody () {
+    createBody() {
         var precision = 30;                              // Number of radial segments
-        var bodyRadius = this.bodyHeight * 0.5 * 0.5;    // Width set to be 50% of the height
+        var bodyRadius = this.bodyWidth * 0.5;
         // Creates the base cylinder
-        var bodyGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, this.bodyHeight, precision, 1, false)
+        var bodyGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, this.bodyHeight, precision)
         var body = new THREE.Mesh(bodyGeometry, this.material);
         // Positions the body over the axis
-        body.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.bodyHeight/2, 0));
         body.castShadow = true;
+        let translationY = (this.bodyHeight / 2) + ((this.legHeight * 0.125) * 2);
+        body.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, translationY, 0));
 
-        this.head = this.createHead();
-        body.add(this.head);
+        body.add(this.createHead(translationY));
         return body;
     }
 
@@ -90,14 +92,14 @@ class Robot extends THREE.Object3D {
      * 
      * @author David Vargas Carrillo
      */
-    createHead() {
+    createHead(translation) {
         var precision = 30;                         // Number of radial segments
         // Creates the base sphere
-        var headGeometry = new THREE.SphereGeometry(this.headRadius, precision, precision, 0, 6.3, 0, 2);
+        var headGeometry = new THREE.SphereGeometry(this.headRadius, precision, precision);
         var head = new THREE.Mesh(headGeometry, this.material);
         // Positions the head over the body
         head.castShadow = true;
-        head.position.y = this.bodyHeight;
+        head.position.y = translation + this.bodyHeight / 2;
         head.add(this.createEye());
         return head;
     }
@@ -109,26 +111,73 @@ class Robot extends THREE.Object3D {
      */
     createEye() {
         var precision = 30;                         // Number of radial segments
-        var eyeRadius = this.headRadius * 0.33;     // Eye is the 33% of the head
+        var eyeRadius = this.headRadius * 0.25;     // Eye is the 25% of the head
         var eyeHeight = eyeRadius / 2;
         // Creates the base sphere
         var eyeGeometry = new THREE.CylinderGeometry(eyeRadius, eyeRadius, eyeHeight, precision, precision);
         var eye = new THREE.Mesh(eyeGeometry, this.material);
         // Positions the eye in the head
         eye.castShadow = true;
-        eye.rotation.x += 45;
-        eye.position.y += 2.6;
-        eye.position.z += 3.3;
+        eye.position.y = this.headRadius/2;
+        eye.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / 3));
+        eye.position.z = this.headRadius * 0.85;
         return eye;
     }
 
     /**
-     * Creates the legs of the robot
+     * Creates a leg of the robot
      * 
-     * @author David Vargas Carrillo
+     * @author David Vargas Carrillo, Andres Molina Lopez
      */
-    createLegs() {
-        
+    createLeg(sign) {
+        let precision = 30;
+        let legLength = this.currentLength;
+        let legRadius = this.legHeight * 0.09375 * 0.5;
+        let legGeometry = new THREE.CylinderGeometry(legRadius, legRadius, legLength, precision);
+        let leg = new THREE.Mesh(legGeometry, this.material);
+
+        leg.castShadow = true;
+        leg.position.y = (legLength / 2) + (this.legHeight * 0.125);
+        leg.position.x = sign * ((this.bodyWidth / 2) + (this.legHeight * 0.125 / 2));
+
+        leg.add(this.createFeet());
+        leg.add(this.createShoulder());
+
+        return leg;
     }
 
+    /**
+     * Creates a feet of the robot
+     * 
+     * @author Andres Molina Lopez
+     */
+    createFeet() {
+        let precision = 30;
+        let feetHeight = this.legHeight * 0.125;
+        let radiusTop = feetHeight / 2;
+        let radiusBottom = this.legHeight * 0.1875 / 2;
+        let feetGeometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, feetHeight, precision);
+        let feet = new THREE.Mesh(feetGeometry, this.material);
+
+        feet.castShadow = true;
+        feet.position.y = - ((this.legHeight * 0.75 / 2) + (feetHeight / 2));
+
+        return feet;
+    }
+
+    /**
+     * Creates a shoulder of the robot
+     * 
+     * @author Andres Molina Lopez
+     */
+    createShoulder() {
+        let shoulderDimensions = this.legHeight * 0.125;
+        let shoulderGeometry = new THREE.BoxGeometry(shoulderDimensions, shoulderDimensions, shoulderDimensions);
+        let shoulder = new THREE.Mesh(shoulderGeometry, this.material);
+
+        shoulder.castShadow = true;
+        shoulder.position.y = (this.legHeight * 0.75 / 2) + (shoulderDimensions / 2);
+
+        return shoulder;
+    }
 }
