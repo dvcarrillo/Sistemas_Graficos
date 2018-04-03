@@ -79,7 +79,9 @@ class Robot extends THREE.Object3D {
         // Positions the body over the axis
         body.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.bodyHeight/2, 0));
         body.castShadow = true;
-        body.add(this.createHead());
+
+        this.head = this.createHead();
+        body.add(this.head);
         return body;
     }
 
@@ -118,6 +120,15 @@ class Robot extends THREE.Object3D {
         eye.position.y += 2.6;
         eye.position.z += 3.3;
         return eye;
+    }
+
+    /**
+     * Creates the legs of the robot
+     * 
+     * @author David Vargas Carrillo
+     */
+    createLegs() {
+        
     }
 
 }
