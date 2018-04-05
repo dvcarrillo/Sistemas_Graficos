@@ -196,8 +196,10 @@ class Robot extends THREE.Object3D {
 
         this.remove(this.rightLeg);
         this.remove(this.leftLeg);
-        this.rightLeg = this.createLeg(-1, stretch);;
-        this.leftLeg = this.createLeg(1, stretch);;
+        this.rightLeg = this.createLeg(-1, stretch);
+        this.leftLeg = this.createLeg(1, stretch);
+        this.rightLeg.scale.y = extraLength;
+        this.leftLeg.scale.y = extraLength;
         this.add(this.rightLeg);
         this.add(this.leftLeg);
     }
