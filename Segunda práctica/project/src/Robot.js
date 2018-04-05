@@ -187,8 +187,7 @@ class Robot extends THREE.Object3D {
 
     // Sets the leg length
     setLegsScale(extraLength){
-        let stretch = extraLength;
-        
+        let stretch = extraLength;        
         if (stretch > this.MAX_LEG_STRETCH) {
             stretch = this.MAX_LEG_STRETCH;
         } else if (stretch < this.MIN_LEG_STRETCH) {
