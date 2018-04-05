@@ -11,9 +11,25 @@
  * }
  */
 
+// Converts angles in degrees to angles in radians
 function degToRad(degrees) {
     return degrees * Math.PI / 180;
 }
+
+// NO FUNCIONA, porque todos los metodos de aqui han quedado obsoletos
+/*
+// Rotates around object's own axis
+function rotateAroundObjectAxis(object, axis, radians) {
+
+    var rotationMatrix = new THREE.Matrix4();
+
+    rotationMatrix.makeRotationAxis(axis.normalize(), radians);
+    object.matrix.multiplySelf(rotationMatrix);
+    object.setRotationFromMatrix(object.matrix);
+}
+*/
+
+/**********************************************************************************/
 
 class Robot extends THREE.Object3D {
 
@@ -155,9 +171,9 @@ class Robot extends THREE.Object3D {
         return shoulder;
     }
 
-    /****************************************/
+    /******************************************************************************/
     // SET METHODS
-    /****************************************/
+    /******************************************************************************/
 
     // Sets the head angle
     setHeadRotation(headRotation) {
@@ -182,6 +198,8 @@ class Robot extends THREE.Object3D {
         }
         rotation = degToRad(rotation);
 
+        var x_axis = new THREE.Vector3(1, 0, 0);
+        /* rotateAroundObjectAxis(this.body, x_axis, rotation); */
         this.body.rotation.x = rotation;
     }
 
