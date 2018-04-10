@@ -16,6 +16,7 @@ class TheScene extends THREE.Scene {
     this.trackballControls = null;
     this.robot = null;
     this.ground = null;
+    this.ovo = null;
   
     this.createLights ();
     this.createCamera (renderer);
@@ -75,6 +76,9 @@ class TheScene extends THREE.Scene {
     model.add(this.robot);
     this.ground = new Ground (300, 300, new THREE.MeshPhongMaterial ({map: textura}), 4);
     model.add (this.ground);
+    this.ovo = new Ovo({});
+    model.add(this.ovo);
+
     return model;
   }
   
