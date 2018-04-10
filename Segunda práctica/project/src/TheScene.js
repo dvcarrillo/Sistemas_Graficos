@@ -8,6 +8,10 @@ class TheScene extends THREE.Scene {
   constructor(renderer) {
     super();
 
+    // Maximum number of Ovo objects in the scene
+    this.MAX_NUMBER_OVO = 20;
+    this.currentOvo = 0;
+
     // Attributes
 
     this.ambientLight = null;
@@ -17,7 +21,16 @@ class TheScene extends THREE.Scene {
     this.robot = null;
     this.ground = null;
     this.ovo = null;
-    this.ovoList = new Array(20).fill(0); // 0:bad, 1: good
+    this.ovoList = new Array(this.MAX_NUMBER_OVO).fill(0); // 0:bad, 1: good
+    
+    let contList = 0;
+    while (contList < (Math.floor(this.MAX_NUMBER_OVO * 0.2))) {
+      const rand = Math.floor(Math.random() * 20);
+      if (this.ovoList[rand] !== 1) {
+        this.ovoList[rand] = 1;
+        contList++;
+      }
+    }
 
     this.createLights();
     this.createCamera(renderer);
@@ -79,23 +92,6 @@ class TheScene extends THREE.Scene {
     model.add(this.robot);
     this.ground = new Ground(300, 300, new THREE.MeshPhongMaterial({ map: textura }), 4);
     model.add(this.ground);
-
-    let cont = 0;
-    while (cont < 4) {
-      const rand = Math.floor(Math.random() * 20);
-      if (this.ovoList[rand] !== 1) {
-        this.ovoList[rand] = 1;
-        cont++;
-      }
-    }
-
-    for (let x = 0; x < this.ovoList.length; x++) {
-      let ovo = new Ovo({ type: this.ovoList[x] })
-      ovo.translateX(100);
-      ovo.translateZ(Math.floor((Math.random() * 298) - 148));
-      ovo.translateY(Math.floor(Math.random() * 10));
-      model.add(ovo);
-    }
 
     return model;
   }
@@ -162,6 +158,31 @@ class TheScene extends THREE.Scene {
     this.robot.setHeadRotation(controls.rotationHead);
     this.robot.setBodyRotation(controls.rotationBody);
     this.robot.setLegsScale(controls.scaleLegs);
+    
+    if (this.currentOvo < this.MAX_NUMBER_OVO) {
+      // 30% of chance for generating an Ovo object
+      if (Math.floor(Math.random() * 9) < 1) {
+        this.generateOvo();
+        this.currentOvo++;
+      }
+    }
+    
+    TWEEN.update();
+    // this.ovoList.forEach(element => {
+    //   // if (typeof element !== 'number') {
+    //   //   //requestAnimationFrame();
+    //   //   console.log(typeof(element));
+    //   //   element.updatePosition();
+    //   // }
+    // });
+  }
+
+  /// Generates an ovo object in the scene
+  generateOvo(){
+    const ovo = new Ovo({type: this.ovoList[this.currentOvo]});
+
+    this.ovoList[this.currentOvo] = ovo;
+    this.model.add(ovo);
   }
 
   /// It returns the camera
