@@ -73,6 +73,8 @@ class TheScene extends THREE.Scene {
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: textura})});
     //model.add (this.crane);
     this.robot = new Robot({});
+    this.robot.translateX(-100);
+    this.robot.rotateY(Math.PI/2);
     model.add(this.robot);
     this.ground = new Ground (300, 300, new THREE.MeshPhongMaterial ({map: textura}), 4);
     model.add (this.ground);
