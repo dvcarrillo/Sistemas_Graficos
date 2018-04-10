@@ -4,12 +4,12 @@
  * @param renderer - The renderer to visualize the scene
  */
 class TheScene extends THREE.Scene {
-  
-  constructor (renderer) {
+
+  constructor(renderer) {
     super();
-    
+
     // Attributes
-    
+
     this.ambientLight = null;
     this.spotLight = null;
     this.camera = null;
@@ -17,73 +17,89 @@ class TheScene extends THREE.Scene {
     this.robot = null;
     this.ground = null;
     this.ovo = null;
-  
-    this.createLights ();
-    this.createCamera (renderer);
-    this.axis = new THREE.AxisHelper (25);
-    this.add (this.axis);
-    this.model = this.createModel ();
-    this.add (this.model);
+    this.ovoList = new Array(20).fill(0); // 0:bad, 1: good
+
+    this.createLights();
+    this.createCamera(renderer);
+    this.axis = new THREE.AxisHelper(25);
+    this.add(this.axis);
+    this.model = this.createModel();
+    this.add(this.model);
   }
-  
+
   /// It creates the camera and adds it to the graph
   /**
    * @param renderer - The renderer associated with the camera
    */
-  createCamera (renderer) {
+  createCamera(renderer) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set (150, 30, 150);
-    var look = new THREE.Vector3 (0,20,0);
+    this.camera.position.set(150, 30, 150);
+    var look = new THREE.Vector3(0, 20, 0);
     this.camera.lookAt(look);
 
-    this.trackballControls = new THREE.TrackballControls (this.camera, renderer);
+    this.trackballControls = new THREE.TrackballControls(this.camera, renderer);
     this.trackballControls.rotateSpeed = 5;
     this.trackballControls.zoomSpeed = -2;
     this.trackballControls.panSpeed = 0.5;
     this.trackballControls.target = look;
-    
+
     this.add(this.camera);
   }
-  
+
   /// It creates lights and adds them to the graph
-  createLights () {
+  createLights() {
     // add subtle ambient lighting
     this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
-    this.add (this.ambientLight);
-    
+    this.add(this.ambientLight);
+
     // add spotlight for the shadows
-    this.spotLight = new THREE.SpotLight( 0xffffff );
-    this.spotLight.position.set( 60, 60, 40 );
+    this.spotLight = new THREE.SpotLight(0xffffff);
+    this.spotLight.position.set(60, 60, 40);
     this.spotLight.castShadow = true;
     // the shadow resolution
-    this.spotLight.shadow.mapSize.width=2048
-    this.spotLight.shadow.mapSize.height=2048;
-    this.add (this.spotLight);
+    this.spotLight.shadow.mapSize.width = 2048
+    this.spotLight.shadow.mapSize.height = 2048;
+    this.add(this.spotLight);
   }
-  
+
   /// It creates the geometric model: crane and ground
   /**
    * @return The model
    */
-  createModel () {
+  createModel() {
     var model = new THREE.Object3D()
     var loader = new THREE.TextureLoader();
-    var textura = loader.load ('../img/iron.jpg');
+    var textura = loader.load('../img/iron.jpg');
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({color: 0xff0000, specular: 0xfbf804, shininess: 70})});
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: textura})});
     //model.add (this.crane);
     this.robot = new Robot({});
     this.robot.translateX(-100);
-    this.robot.rotateY(Math.PI/2);
+    this.robot.rotateY(Math.PI / 2);
     model.add(this.robot);
-    this.ground = new Ground (300, 300, new THREE.MeshPhongMaterial ({map: textura}), 4);
-    model.add (this.ground);
-    this.ovo = new Ovo({});
-    model.add(this.ovo);
+    this.ground = new Ground(300, 300, new THREE.MeshPhongMaterial({ map: textura }), 4);
+    model.add(this.ground);
+
+    let cont = 0;
+    while (cont < 4) {
+      const rand = Math.floor(Math.random() * 20);
+      if (this.ovoList[rand] !== 1) {
+        this.ovoList[rand] = 1;
+        cont++;
+      }
+    }
+
+    for (let x = 0; x < this.ovoList.length; x++) {
+      let ovo = new Ovo({ type: this.ovoList[x] })
+      ovo.translateX(100);
+      ovo.translateZ(Math.floor((Math.random() * 298) - 148));
+      ovo.translateY(Math.floor(Math.random() * 10));
+      model.add(ovo);
+    }
 
     return model;
   }
-  
+
   // // Public methods
 
   // /// It adds a new box, or finish the action
@@ -94,7 +110,7 @@ class TheScene extends THREE.Scene {
   // addBox (event, action) {
   //   this.ground.addBox(event, action);
   // }
-  
+
   // /// It moves or rotates a box on the ground
   // /**
   //  * @param event - Mouse information
@@ -103,7 +119,7 @@ class TheScene extends THREE.Scene {
   // moveBox (event, action) {
   //   this.ground.moveBox (event, action);
   // }
-  
+
   // //! It deletes a box
   // /**
   //  * @param event - Mouse information
@@ -125,7 +141,7 @@ class TheScene extends THREE.Scene {
   //     return this.crane.takeBox (box); 
   //   // The retuned height set the new limit to down the hook
   // }
-  
+
   // /// The crane drops its taken box
   // dropBox () {
   //   var box = this.crane.dropBox ();
@@ -135,60 +151,60 @@ class TheScene extends THREE.Scene {
   //     this.ground.dropBox (box);
   //   }
   // }
-  
+
 
   /// It sets the robot position according to the GUI
   /**
    * @controls - The GUI information
    */
-  animate (controls) {
+  animate(controls) {
     this.axis.visible = controls.axis;
     this.robot.setHeadRotation(controls.rotationHead);
     this.robot.setBodyRotation(controls.rotationBody);
     this.robot.setLegsScale(controls.scaleLegs);
   }
-  
+
   /// It returns the camera
   /**
    * @return The camera
    */
-  getCamera () {
+  getCamera() {
     return this.camera;
   }
-  
+
   /// It returns the camera controls
   /**
    * @return The camera controls
    */
-  getCameraControls () {
+  getCameraControls() {
     return this.trackballControls;
   }
-  
+
   /// It updates the aspect ratio of the camera
   /**
    * @param anAspectRatio - The new aspect ratio for the camera
    */
-  setCameraAspect (anAspectRatio) {
+  setCameraAspect(anAspectRatio) {
     this.camera.aspect = anAspectRatio;
     this.camera.updateProjectionMatrix();
   }
-  
+
 }
 
-  // class variables
-  
-  // Application modes
-  TheScene.NO_ACTION = 0;
-  TheScene.ADDING_BOXES = 1;
-  TheScene.MOVING_BOXES = 2;
-  TheScene.DELETING_BOXES = 3;
-  
-  // Actions
-  TheScene.NEW_BOX = 0;
-  TheScene.MOVE_BOX = 1;
-  TheScene.SELECT_BOX = 2;
-  TheScene.ROTATE_BOX = 3;
-  TheScene.DELETE_BOX = 4;
-  TheScene.END_ACTION = 10;
+// class variables
+
+// Application modes
+TheScene.NO_ACTION = 0;
+TheScene.ADDING_BOXES = 1;
+TheScene.MOVING_BOXES = 2;
+TheScene.DELETING_BOXES = 3;
+
+// Actions
+TheScene.NEW_BOX = 0;
+TheScene.MOVE_BOX = 1;
+TheScene.SELECT_BOX = 2;
+TheScene.ROTATE_BOX = 3;
+TheScene.DELETE_BOX = 4;
+TheScene.END_ACTION = 10;
 
 

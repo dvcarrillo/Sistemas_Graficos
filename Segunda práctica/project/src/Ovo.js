@@ -15,10 +15,12 @@ class Ovo extends THREE.Object3D {
         super();
 
         this.ovoRadius = (parameters.ovoRadius === undefined ? 2 : parameters.ovoRadius);
-        
+        this.ovoType = parameters.type;
+        this.material = (parameters.type === 0 ?
+            new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xfbf804, shininess: 0 })
+            : new THREE.MeshPhongMaterial({ color: 0x00ff00, specular: 0xfbf804, shininess: 0 }));
         this.object = this.createObject();
         this.add(this.object);
-        console.log(this.object.position.x);
     }
 
     createObject() {
@@ -26,7 +28,7 @@ class Ovo extends THREE.Object3D {
 
         // Creates the sphere
         var objectGeometry = new THREE.SphereGeometry(this.ovoRadius, precision, precision);
-        var object = new THREE.Mesh(objectGeometry, new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xfbf804, shininess: 0 }));
+        var object = new THREE.Mesh(objectGeometry, this.material);
 
         // Positions the head over the body
         object.castShadow = true;
