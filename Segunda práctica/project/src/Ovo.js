@@ -1,6 +1,6 @@
 /**
  * Ovo class
- * Represents an object in the scene that could be good or bad
+ * Represents a moving object in the scene that could be good or bad
  * 
  * @author David Vargas, Andres Molina
  * 
@@ -26,6 +26,7 @@ class Ovo extends THREE.Object3D {
         // this.updatePosition = this.updatePosition.bind(this);
     }
 
+    // Builds the object, determining its geometry, position and movement
     createObject() {
         const precision = 30;   // Number of radial segments
 
@@ -45,16 +46,14 @@ class Ovo extends THREE.Object3D {
         object.position.z = this.start.z;
         
         // Movement definition
-        this.speed = Math.floor((Math.random() * 8000) + 100);      // Seconds to go from start to end
+        this.speed = Math.floor((Math.random() * 8000) + 3000);      // Seconds to go from start to end
 
         this.movement = new TWEEN.Tween(position)
             .to(this.end, this.speed)
             .easing(TWEEN.Easing.Quadratic.In)
-            .onUpdate(function () { object.position.x = position.x; })
-            .onComplete(function () { 
-                this.start.z = Math.floor((Math.random() * 298) - 148);
-                object.position.x = this.start.x;
-                object.position.z = this.start.z;
+            .onUpdate(function () { 
+                object.position.x = position.x;
+                object.position.z = position.z;
             })
             .repeat(Infinity)
             .start();
@@ -62,7 +61,4 @@ class Ovo extends THREE.Object3D {
         return object;
     }
 
-    // updatePosition() {
-    //     TWEEN.update();
-    // }
 }
