@@ -20,10 +20,9 @@ class Ovo extends THREE.Object3D {
             new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xfbf804, shininess: 0 })
             : new THREE.MeshPhongMaterial({ color: 0x00ff00, specular: 0xfbf804, shininess: 0 }));
 
-        this.object = this.createObject();
-        this.add(this.object);
+        this.ovoObject = this.createObject();
 
-        // this.updatePosition = this.updatePosition.bind(this);
+        this.add(this.ovoObject);
     }
 
     // Builds the object, determining its geometry, position and movement
@@ -87,5 +86,4 @@ class Ovo extends THREE.Object3D {
 
         return object;
     }
-
 }

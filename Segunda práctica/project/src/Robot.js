@@ -63,7 +63,7 @@ class Robot extends THREE.Object3D {
         this.leftShoulder;
         this.body;
         this.head;
-
+        
         // this.add(this.body);
         this.add(this.rightFoot);
         this.add(this.leftFoot);

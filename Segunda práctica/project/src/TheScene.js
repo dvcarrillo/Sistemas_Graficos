@@ -19,6 +19,7 @@ class TheScene extends THREE.Scene {
     this.camera = null;
     this.trackballControls = null;
     this.robot = null;
+    this.robotCollider = null;
     this.ground = null;
     this.ovoList = new Array(this.MAX_NUMBER_OVO).fill(0); // 0:bad, 1: good
     
@@ -88,6 +89,11 @@ class TheScene extends THREE.Scene {
     this.robot = new Robot({});
     this.robot.translateX(-100);
     this.robot.rotateY(Math.PI / 2);
+
+    // Robot collider
+    this.robotCollider = new THREE.Box3();
+    this.robotCollider.setFromObject(this.robot);
+
     model.add(this.robot);
     this.ground = new Ground(300, 300, new THREE.MeshPhongMaterial({ map: textura }), 4);
     model.add(this.ground);
@@ -166,14 +172,34 @@ class TheScene extends THREE.Scene {
       }
     }
     
+    // Siguiente paso en el movimiento de todos los objetos
     TWEEN.update();
-    // this.ovoList.forEach(element => {
-    //   // if (typeof element !== 'number') {
-    //   //   //requestAnimationFrame();
-    //   //   console.log(typeof(element));
-    //   //   element.updatePosition();
-    //   // }
-    // });
+
+    // Recorre la lista de ovo activos y detecta colisiones
+    this.ovoList.forEach(ovo => {
+      if ((typeof ovo != "number") && (this.robot)) {
+        // Ovo collider
+        var ovoCollider = new THREE.Box3();
+        ovoCollider.setFromObject(ovo);
+
+        // Collision check
+        if (ovoCollider.intersectsBox(this.robotCollider))
+          console.log("Colision detectada");
+
+        // // For TESTING purposes
+        // // Helps to visualize object colliders
+        // var ovoColliderView = new THREE.Box3Helper(ovoCollider, 0xffff00);
+        // this.add(ovoColliderView);
+        // var robotColliderView = new THREE.Box3Helper(robotCollider, 0xffff00);
+        // this.add(robotColliderView);
+
+        /* --------------- NOTA ---------------
+        * Fijarse que al detectar la colision, la imprime multiples veces.
+        * Eso es porque hay que desactivar el objeto hasta que llegue al final y
+        * se vuelva a activar
+        */
+      }
+    });
   }
 
   /// Generates an ovo object in the scene
