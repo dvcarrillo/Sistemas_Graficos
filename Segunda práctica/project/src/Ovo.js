@@ -44,19 +44,46 @@ class Ovo extends THREE.Object3D {
         object.position.x = this.start.x;
         object.position.y = this.start.y;
         object.position.z = this.start.z;
-        
+
         // Movement definition
         this.speed = Math.floor((Math.random() * 8000) + 3000);      // Seconds to go from start to end
 
         this.movement = new TWEEN.Tween(position)
             .to(this.end, this.speed)
             .easing(TWEEN.Easing.Quadratic.In)
-            .onUpdate(function () { 
-                object.position.x = position.x;
+            .onStart(() => {
+                object.position.y = position.y;
                 object.position.z = position.z;
             })
-            .repeat(Infinity)
-            .start();
+            .onUpdate(() => {
+                object.position.x = position.x;
+            })
+            .onComplete(() => {
+                position.x = this.start.x;
+                position.y = Math.floor((Math.random() * 10) + this.ovoRadius);
+                position.z = Math.floor((Math.random() * 298) - 148);
+            });
+
+        this.movement2 = new TWEEN.Tween(position)
+            .to(this.end, this.speed)
+            .easing(TWEEN.Easing.Quadratic.In)
+            .onStart(() => {
+                object.position.y = position.y;
+                object.position.z = position.z;
+            })
+            .onUpdate(() => {
+                object.position.x = position.x;
+            })
+            .onComplete(() => {
+                position.x = this.start.x;
+                position.y = Math.floor((Math.random() * 10) + this.ovoRadius);
+                position.z = Math.floor((Math.random() * 298) - 148);
+            });
+        
+        this.movement.chain(this.movement2);
+        this.movement2.chain(this.movement);
+
+        this.movement.start();
 
         return object;
     }

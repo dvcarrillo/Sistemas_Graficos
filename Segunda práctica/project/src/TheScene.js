@@ -20,7 +20,6 @@ class TheScene extends THREE.Scene {
     this.trackballControls = null;
     this.robot = null;
     this.ground = null;
-    this.ovo = null;
     this.ovoList = new Array(this.MAX_NUMBER_OVO).fill(0); // 0:bad, 1: good
     
     let contList = 0;
