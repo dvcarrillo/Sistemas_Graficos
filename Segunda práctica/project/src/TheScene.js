@@ -175,31 +175,52 @@ class TheScene extends THREE.Scene {
     // Siguiente paso en el movimiento de todos los objetos
     TWEEN.update();
 
-    // Recorre la lista de ovo activos y detecta colisiones
-    this.ovoList.forEach(ovo => {
-      if ((typeof ovo != "number") && (this.robot)) {
-        // Ovo collider
-        var ovoCollider = new THREE.Box3();
-        ovoCollider.setFromObject(ovo);
+    /* Only checks for collisions if all the following is true:
+    *   - Robot is defined
+    *   - Robot is alive
+    *   - ovoList[i] is an object
+    *   - ovo in ovoList[i] is enabled
+    */
+    if ((this.robot) && (!this.robot.isDead)) {
+      // Recorre la lista de ovo activos y detecta colisiones
+      this.ovoList.forEach(ovo => {
 
-        // Collision check
-        if (ovoCollider.intersectsBox(this.robotCollider))
-          console.log("Colision detectada");
+        if ((typeof ovo === "object") && (ovo.ovoState === 1)) {
+          // Ovo collider creation
+          var ovoCollider = new THREE.Box3();
+          ovoCollider.setFromObject(ovo);
+          
+          // Collision check
+          if (ovoCollider.intersectsBox(this.robotCollider)) {
+            var ovoType = ovo.ovoType;
+            
+            if (ovoType === 0) {    // ovo damages the robot
+              this.robot.substractLife(ovo.damage);
+            }
+            else {                  // ovo benefits the robot
+              this.robot.recoverLife(ovo.lifeRecover);
 
-        // // For TESTING purposes
-        // // Helps to visualize object colliders
-        // var ovoColliderView = new THREE.Box3Helper(ovoCollider, 0xffff00);
-        // this.add(ovoColliderView);
-        // var robotColliderView = new THREE.Box3Helper(robotCollider, 0xffff00);
-        // this.add(robotColliderView);
+              // // Check death from robot
+              // if (this.robot.isDead)
+              //   this.pauseGame();
+            }
+            ovo.deleteFromScene();
+          }
 
-        /* --------------- NOTA ---------------
-        * Fijarse que al detectar la colision, la imprime multiples veces.
-        * Eso es porque hay que desactivar el objeto hasta que llegue al final y
-        * se vuelva a activar
-        */
-      }
-    });
+          // // For TESTING purposes
+          // // Helps to visualize object colliders
+          // var ovoColliderView = new THREE.Box3Helper(ovoCollider, 0xffff00);
+          // this.add(ovoColliderView);
+          // var robotColliderView = new THREE.Box3Helper(robotCollider, 0xffff00);
+          // this.add(robotColliderView);
+
+          /* --------------- NOTA ---------------
+          * Implementar la muerte del robot y la consecuente pausa del juego!
+          * Recordar que no se podra mover en estado de pausa
+          */
+        }
+      });
+    }
   }
 
   /// Generates an ovo object in the scene

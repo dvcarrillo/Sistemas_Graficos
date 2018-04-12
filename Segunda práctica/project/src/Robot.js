@@ -41,6 +41,11 @@ class Robot extends THREE.Object3D {
         this.bodyWidth = this.bodyHeight * 0.5;
         this.headRadius = this.robotHeight * 0.1428;
 
+        // Robot life properties
+        this.MAX_ROBOT_LIFE = 50;
+        this.currentLife = this.MAX_ROBOT_LIFE;
+        this.isDead = this.currentLife < 0 ? true : false;
+
         // Robot movement properties
         this.MAX_HEAD_ANGLE = 80;
         this.MIN_HEAD_ANGLE = -80;
@@ -69,7 +74,10 @@ class Robot extends THREE.Object3D {
         this.add(this.leftFoot);
     }
 
-    /*** PRIVATE METHODS ***/
+    /******************************************************************************/
+    // PRIVATE METHODS
+    /******************************************************************************/
+
     // Creates the body of the robot
     createBody() {
         var precision = 30;                              // Number of radial segments
@@ -125,7 +133,6 @@ class Robot extends THREE.Object3D {
         
         return eye;
     }
-
 
     // Creates a foot of the robot
     // Side: positive number or zero for creating the left foot
@@ -239,4 +246,28 @@ class Robot extends THREE.Object3D {
         this.rightShoulder.position.y = (this.legHeight * 0.75) * stretch;
         this.leftShoulder.position.y = (this.legHeight * 0.75) * stretch;
     }
+
+    // Substacts from currentLife the indicated amount
+    substractLife(damage) {
+        this.currentLife -= damage;
+        
+        console.log("Arrrrr!!!!! Nuestro intrepido grumete ha sido herido! (" + this.currentLife + " pts. de vida restante)");
+
+        if (this.currentLife <= 0) {
+            this.isDead = true;
+            console.log("MORISTE");
+        }
+        /* Check then death from TheScene.js */
+    }
+
+    // Adds the indicated amount to currentLife
+    recoverLife(lifeRecover) {
+        this.currentLife += lifeRecover;
+
+        console.log("Toma toma pepinaso (esferico)!! Y me lo como yo yo yo!! (" + this.currentLife + " pts. de vida restante)");
+
+        if (this.currentLife > this.MAX_ROBOT_LIFE)
+            this.currentLife = this.MAX_ROBOT_LIFE;
+    }
+
 }

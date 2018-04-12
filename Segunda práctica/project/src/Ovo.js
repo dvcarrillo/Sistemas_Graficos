@@ -1,9 +1,14 @@
 /**
  * Ovo class
- * Represents a moving object in the scene that could be good or bad
+ * Represents a moving object in the scene that is either good or bad
  * 
  * @author David Vargas, Andres Molina
  * 
+ * @param parameters = {
+ *      ovoRadius: <float>
+ *      ovoType: <int>
+ *      material: <Material>
+ * }
  */
 
 
@@ -15,14 +20,18 @@ class Ovo extends THREE.Object3D {
         super();
 
         this.ovoRadius = (parameters.ovoRadius === undefined ? 2 : parameters.ovoRadius);
-        this.ovoType = parameters.type;
+        this.ovoType = parameters.type;     // 0:bad, 1: good
         this.material = (parameters.type === 0 ?
             new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xfbf804, shininess: 0 })
             : new THREE.MeshPhongMaterial({ color: 0x00ff00, specular: 0xfbf804, shininess: 0 }));
 
+        // Object properties
         this.ovoObject = this.createObject();
-
-        this.add(this.ovoObject);
+        this.ovoState = 0;                  // 0: inactive, 1: active
+        
+        // Effects over the Robot
+        this.damage = 10;                   // Amount of life points to substract to Robot's currentLife
+        this.lifeRecover = 20;              // Amount of life points to add to Robot's currentLife
     }
 
     // Builds the object, determining its geometry, position and movement
@@ -51,6 +60,7 @@ class Ovo extends THREE.Object3D {
             .to(this.end, this.speed)
             .easing(TWEEN.Easing.Quadratic.In)
             .onStart(() => {
+                this.addToScene();
                 object.position.y = position.y;
                 object.position.z = position.z;
             })
@@ -67,6 +77,7 @@ class Ovo extends THREE.Object3D {
             .to(this.end, this.speed)
             .easing(TWEEN.Easing.Quadratic.In)
             .onStart(() => {
+                this.addToScene();
                 object.position.y = position.y;
                 object.position.z = position.z;
             })
@@ -85,5 +96,21 @@ class Ovo extends THREE.Object3D {
         this.movement.start();
 
         return object;
+    }
+    
+    // Adds the object to the scene
+    addToScene() {
+        if(this.ovoState === 0) {
+            this.ovoState = 1;
+            this.add(this.ovoObject);
+        }
+    }
+
+    // Deletes the object from the scene
+    deleteFromScene() {
+        if(this.ovoState === 1) {
+            this.ovoState = 0;
+            this.remove(this.ovoObject);
+        }
     }
 }
