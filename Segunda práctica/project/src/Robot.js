@@ -42,9 +42,11 @@ class Robot extends THREE.Object3D {
         this.headRadius = this.robotHeight * 0.1428;
 
         // Robot life properties
-        this.MAX_ROBOT_LIFE = 50;
-        this.currentLife = this.MAX_ROBOT_LIFE;
-        this.isDead = this.currentLife < 0 ? true : false;
+        this.MAX_ROBOT_ENERGY = 100;
+
+        this.currentEnergy = this.MAX_ROBOT_ENERGY;
+        this.currentPoints = 0;
+        this.isDead = this.currentEnergy < 0 ? true : false;
 
         // Robot movement properties
         this.MAX_HEAD_ANGLE = 80;
@@ -247,27 +249,34 @@ class Robot extends THREE.Object3D {
         this.leftShoulder.position.y = (this.legHeight * 0.75) * stretch;
     }
 
-    // Substacts from currentLife the indicated amount
-    substractLife(damage) {
-        this.currentLife -= damage;
+    // Substacts from currentEnergy the indicated amount
+    substractEnergy(damage) {
+        this.currentEnergy -= damage;
         
-        console.log("Arrrrr!!!!! Nuestro intrepido grumete ha sido herido! (" + this.currentLife + " pts. de vida restante)");
+        console.log("Arrrrr!!!!! Nuestro intrepido grumete ha sido herido! (" + this.currentEnergy + " pts. de energia restante)");
 
-        if (this.currentLife <= 0) {
+        if (this.currentEnergy <= 0) {
             this.isDead = true;
-            console.log("MORISTE");
+            console.log("AL ENCHUFE!");
         }
         /* Check then death from TheScene.js */
     }
 
-    // Adds the indicated amount to currentLife
-    recoverLife(lifeRecover) {
-        this.currentLife += lifeRecover;
+    // Adds energy to the robot
+    addEnergy() {
+        if (this.currentPoints < 5) {
+            this.currentEnergy += 5 - this.currentPoints;
 
-        console.log("Toma toma pepinaso (esferico)!! Y me lo como yo yo yo!! (" + this.currentLife + " pts. de vida restante)");
-
-        if (this.currentLife > this.MAX_ROBOT_LIFE)
-            this.currentLife = this.MAX_ROBOT_LIFE;
+            if (this.currentEnergy > this.MAX_ROBOT_ENERGY)
+                this.currentEnergy = this.MAX_ROBOT_ENERGY;
+        }
+        console.log("SE HA RECUPERADO ENERGIA!!!! ( " + this.currentEnergy + " pts. de energia)");
     }
 
+    // Adds the indicated amount of points
+    addPoints(points) {
+        this.currentPoints += points;
+        console.log("Toma toma pepinaso (esferico)!! Y me lo como yo yo yo!! (" + this.currentPoints + " puntos acumulados)");
+    }
+    
 }

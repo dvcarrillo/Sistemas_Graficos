@@ -185,7 +185,7 @@ class TheScene extends THREE.Scene {
       // Recorre la lista de ovo activos y detecta colisiones
       this.ovoList.forEach(ovo => {
 
-        if ((typeof ovo === "object") && (ovo.ovoState === 1)) {
+        if ((typeof ovo === "object") &&(ovo.ovoState === 1)) {
           // Ovo collider creation
           var ovoCollider = new THREE.Box3();
           ovoCollider.setFromObject(ovo);
@@ -195,16 +195,17 @@ class TheScene extends THREE.Scene {
             var ovoType = ovo.ovoType;
             
             if (ovoType === 0) {    // ovo damages the robot
-              this.robot.substractLife(ovo.damage);
+              this.robot.substractEnergy(ovo.damage);
             }
             else {                  // ovo benefits the robot
-              this.robot.recoverLife(ovo.lifeRecover);
+              this.robot.addPoints(ovo.addPoints);
+              this.robot.addEnergy();
 
               // // Check death from robot
               // if (this.robot.isDead)
               //   this.pauseGame();
             }
-            ovo.deleteFromScene();
+            ovo.hitRobot();
           }
 
           // // For TESTING purposes

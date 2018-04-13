@@ -11,6 +11,9 @@
  * }
  */
 
+function intRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) +  min;
+}
 
 /**********************************************************************************/
 
@@ -27,11 +30,13 @@ class Ovo extends THREE.Object3D {
 
         // Object properties
         this.ovoObject = this.createObject();
-        this.ovoState = 0;                  // 0: inactive, 1: active
+        this.ovoState = 0;                              // 0: inactive, 1: active
         
         // Effects over the Robot
-        this.damage = 10;                   // Amount of life points to substract to Robot's currentLife
-        this.lifeRecover = 20;              // Amount of life points to add to Robot's currentLife
+        this.damage = 10;                               // Amount of life points to substract to Robot's currentLife
+        this.addPoints = intRandomNumber(0, 5);         // Amount of life points to add to Robot's currentLife
+
+        this.add(this.ovoObject);
     }
 
     // Builds the object, determining its geometry, position and movement
@@ -60,7 +65,7 @@ class Ovo extends THREE.Object3D {
             .to(this.end, this.speed)
             .easing(TWEEN.Easing.Quadratic.In)
             .onStart(() => {
-                this.addToScene();
+                this.recover();
                 object.position.y = position.y;
                 object.position.z = position.z;
             })
@@ -71,13 +76,14 @@ class Ovo extends THREE.Object3D {
                 position.x = this.start.x;
                 position.y = Math.floor((Math.random() * 10) + this.ovoRadius);
                 position.z = Math.floor((Math.random() * 298) - 148);
+                
             });
 
         this.movement2 = new TWEEN.Tween(position)
             .to(this.end, this.speed)
             .easing(TWEEN.Easing.Quadratic.In)
             .onStart(() => {
-                this.addToScene();
+                this.recover();
                 object.position.y = position.y;
                 object.position.z = position.z;
             })
@@ -99,18 +105,16 @@ class Ovo extends THREE.Object3D {
     }
     
     // Adds the object to the scene
-    addToScene() {
+    recover() {
         if(this.ovoState === 0) {
             this.ovoState = 1;
-            this.add(this.ovoObject);
         }
     }
 
     // Deletes the object from the scene
-    deleteFromScene() {
+    hitRobot() {
         if(this.ovoState === 1) {
             this.ovoState = 0;
-            this.remove(this.ovoObject);
         }
     }
 }
