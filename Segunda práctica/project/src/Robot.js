@@ -266,11 +266,12 @@ class Robot extends THREE.Object3D {
     addEnergy() {
         if (this.currentPoints < 5) {
             this.currentEnergy += 5 - this.currentPoints;
-
+            
             if (this.currentEnergy > this.MAX_ROBOT_ENERGY)
                 this.currentEnergy = this.MAX_ROBOT_ENERGY;
+
+            console.log("SE HA RECUPERADO ENERGIA!!!! ( " + this.currentEnergy + " pts. de energia)");
         }
-        console.log("SE HA RECUPERADO ENERGIA!!!! ( " + this.currentEnergy + " pts. de energia)");
     }
 
     // Adds the indicated amount of points

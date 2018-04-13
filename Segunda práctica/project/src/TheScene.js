@@ -212,7 +212,7 @@ class TheScene extends THREE.Scene {
           // // Helps to visualize object colliders
           // var ovoColliderView = new THREE.Box3Helper(ovoCollider, 0xffff00);
           // this.add(ovoColliderView);
-          // var robotColliderView = new THREE.Box3Helper(robotCollider, 0xffff00);
+          // var robotColliderView = new THREE.Box3Helper(this.robotCollider, 0xffff00);
           // this.add(robotColliderView);
 
           /* --------------- NOTA ---------------

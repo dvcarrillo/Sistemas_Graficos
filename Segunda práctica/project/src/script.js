@@ -230,6 +230,8 @@ function render() {
   scene.getCameraControls().update();
   scene.animate(GUIcontrols);
 
+  this.setMessage("Puntos: " + this.scene.robot.currentPoints);
+
   renderer.render(scene, scene.getCamera());
 }
 
@@ -244,8 +246,8 @@ $(function () {
   window.addEventListener("mousemove", onMouseMove, true);
   window.addEventListener("mousedown", onMouseDown, true);
   window.addEventListener("mouseup", onMouseUp, true);
-  window.addEventListener("mousewheel", onMouseWheel, true);   // For Chrome an others
-  window.addEventListener("DOMMouseScroll", onMouseWheel, true); // For Firefox
+  window.addEventListener("mousewheel", onMouseWheel, true);      // For Chrome an others
+  window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new TheScene(renderer.domElement);
