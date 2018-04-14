@@ -21,7 +21,10 @@ class TheScene extends THREE.Scene {
     this.robot = null;
     this.robotCollider = null;
     this.ground = null;
+    this.sky = null;
     this.ovoList = new Array(this.MAX_NUMBER_OVO).fill(0); // 0:bad, 1: good
+
+    this.energyBar = null;
     
     let contList = 0;
     while (contList < (Math.floor(this.MAX_NUMBER_OVO * 0.2))) {
@@ -46,8 +49,8 @@ class TheScene extends THREE.Scene {
    */
   createCamera(renderer) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(150, 30, 150);
-    var look = new THREE.Vector3(0, 20, 0);
+    this.camera.position.set(-300, 200, 0);
+    var look = new THREE.Vector3(10, 0, 0);
     this.camera.lookAt(look);
 
     this.trackballControls = new THREE.TrackballControls(this.camera, renderer);
@@ -75,16 +78,17 @@ class TheScene extends THREE.Scene {
     this.add(this.spotLight);
   }
 
-  /// It creates the geometric model: crane and ground
+  /// It creates the geometric model: robot, ground and energy bar
   /**
    * @return The model
    */
   createModel() {
     var model = new THREE.Object3D()
     var loader = new THREE.TextureLoader();
-    var textura = loader.load('../img/iron.jpg');
+    var ground_texture = loader.load('../img/iron.jpg');
+    var sky_texture = loader.load('../img/mw.jpg');
     //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({color: 0xff0000, specular: 0xfbf804, shininess: 70})});
-    //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: textura})});
+    //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: ground_texture})});
     //model.add (this.crane);
     this.robot = new Robot({});
     this.robot.translateX(-100);
@@ -93,10 +97,16 @@ class TheScene extends THREE.Scene {
     // Robot collider
     this.robotCollider = new THREE.Box3();
     this.robotCollider.setFromObject(this.robot);
+    
+    // Energy bar
+    this.energyBar = new EnergyBar({});
 
     model.add(this.robot);
-    this.ground = new Ground(300, 300, new THREE.MeshPhongMaterial({ map: textura }), 4);
+    model.add(this.energyBar);
+    this.ground = new Ground(300, 300, new THREE.MeshPhongMaterial({ map: ground_texture }), 4);
+    this.sky = new Sky({background: new THREE.MeshBasicMaterial({ map: sky_texture })});
     model.add(this.ground);
+    model.add(this.sky);
 
     return model;
   }
@@ -196,10 +206,12 @@ class TheScene extends THREE.Scene {
             
             if (ovoType === 0) {    // ovo damages the robot
               this.robot.substractEnergy(ovo.damage);
+              this.energyBar.setToEnergy(this.robot.currentEnergy);
             }
             else {                  // ovo benefits the robot
               this.robot.addPoints(ovo.addPoints);
               this.robot.addEnergy();
+              this.energyBar.setToEnergy(this.robot.currentEnergy);
 
               // // Check death from robot
               // if (this.robot.isDead)

@@ -22,7 +22,7 @@ applicationMode = TheScene.NO_ACTION;
  */
 function createGUI(withStats) {
   GUIcontrols = new function () {
-    this.axis = true;
+    // this.axis = true;
     this.transform = true;
     this.rotationHead = 0;
     this.rotationBody = 0;
@@ -43,8 +43,8 @@ function createGUI(withStats) {
   }
 
   var gui = new dat.GUI();
-  var axisLights = gui.addFolder('Axis and Lights');
-  axisLights.add(GUIcontrols, 'axis').name('Axis on/off :');
+  // var axisLights = gui.addFolder('Axis and Lights');
+  // axisLights.add(GUIcontrols, 'axis').name('Axis on/off :');
 
   // var actions = gui.addFolder ('Actions');
   //   var addingBoxes = actions.add(GUIcontrols, 'addBox').name (': Adding boxes :');
@@ -101,7 +101,7 @@ function initStats() {
  * @param str - The message
  */
 function setMessage(str) {
-  document.getElementById("Messages").innerHTML = "<h2>" + str + "</h2>";
+  document.getElementById("Messages").innerHTML = "<h2 class='points-display'>" + str + "</h2>";
 }
 
 /// It processes the clic-down of the mouse
@@ -230,7 +230,10 @@ function render() {
   scene.getCameraControls().update();
   scene.animate(GUIcontrols);
 
-  this.setMessage("Puntos: " + this.scene.robot.currentPoints);
+  if (this.scene.robot.currentEnergy > 0)
+    this.setMessage("ENERGY: " + this.scene.robot.currentEnergy + "% · POINTS: " + this.scene.robot.currentPoints);
+  else
+    this.setMessage("DEAD");
 
   renderer.render(scene, scene.getCamera());
 }
