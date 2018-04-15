@@ -41,8 +41,8 @@ class EnergyBar extends THREE.Object3D {
     setToEnergy(currentEnergy) {
         this.remove(this.barObject);
 
-        if (currentEnergy < 0)
-            currentEnergy = 0;
+        if (currentEnergy < 1)
+            currentEnergy = 0.0;
         else if (currentEnergy > 100)
             currentEnergy = 100;
 

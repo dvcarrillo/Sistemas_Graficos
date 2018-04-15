@@ -192,10 +192,10 @@ class TheScene extends THREE.Scene {
     *   - ovo in ovoList[i] is enabled
     */
     if ((this.robot) && (!this.robot.isDead)) {
-      // Recorre la lista de ovo activos y detecta colisiones
+      // Iterates over the ovo list and detects collisions
       this.ovoList.forEach(ovo => {
 
-        if ((typeof ovo === "object") &&(ovo.ovoState === 1)) {
+        if ((typeof ovo === "object") && (ovo.ovoState === 1)) {
           // Ovo collider creation
           var ovoCollider = new THREE.Box3();
           ovoCollider.setFromObject(ovo);
