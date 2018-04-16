@@ -27,6 +27,7 @@ function createGUI(withStats) {
     this.rotationHead = 0;
     this.rotationBody = 0;
     this.scaleLegs = 1;
+    this.difficulty = 1;
     // this.addBox   = function () {
     //   setMessage ("Añadir cajas clicando en el suelo");
     //   applicationMode = TheScene.ADDING_BOXES;
@@ -69,6 +70,9 @@ function createGUI(withStats) {
   robotControls.add(GUIcontrols, 'scaleLegs', 1, 1.2, 0.1).name('Leg scale (%)');
   robotControls.add(GUIcontrols, 'rotationHead', -80, 80, 0.1).name('Head rotation');
   robotControls.add(GUIcontrols, 'rotationBody', -45, 30, 0.1).name('Body rotation');
+
+  var difficultyControl = gui.addFolder('Game Difficulty');
+  difficultyControl.add(GUIcontrols, 'difficulty', 1, 3, 1).name('Difficulty');
 
   // The method  listen()  allows the height attribute to be written, not only read
 

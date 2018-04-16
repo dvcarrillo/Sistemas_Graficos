@@ -13,8 +13,11 @@ class TheScene extends THREE.Scene {
     super();
 
     // Maximum number of Ovo objects in the scene
-    this.MAX_NUMBER_OVO = 20;
+    this.MAX_NUMBER_OVO = 40;
     this.currentOvo = 0;
+
+    // Current difficulty
+    this.difficulty = 1;
 
     // Attributes
     this.ambientLight = null;
@@ -22,7 +25,6 @@ class TheScene extends THREE.Scene {
     this.camera = null;
     this.trackballControls = null;
     this.robot = null;
-    this.robotCollider = null;
     this.ground = null;
     this.sky = null;
     this.ovoList = new Array(this.MAX_NUMBER_OVO).fill(0); // 0:bad, 1: good
@@ -96,10 +98,6 @@ class TheScene extends THREE.Scene {
     this.robot = new Robot({});
     this.robot.translateX(-100);
     this.robot.rotateY(degToRad(90));
-
-    // Robot collider
-    this.robotCollider = new THREE.Box3();
-    this.robotCollider.setFromObject(this.robot);
 
     // Energy bar
     this.energyBar = new EnergyBar({});
@@ -177,6 +175,8 @@ class TheScene extends THREE.Scene {
     this.robot.setBodyRotation(controls.rotationBody);
     this.robot.setLegsScale(controls.scaleLegs);
 
+    this.setDifficulty(controls.difficulty);
+
     if (this.currentOvo < this.MAX_NUMBER_OVO) {
       // 30% of chance for generating an Ovo object
       if (Math.floor(Math.random() * 9) < 1) {
@@ -203,8 +203,12 @@ class TheScene extends THREE.Scene {
           var ovoCollider = new THREE.Box3();
           ovoCollider.setFromObject(ovo);
 
+          // Robot collider creation
+          var robotCollider = new THREE.Box3();
+          robotCollider.setFromObject(this.robot);
+
           // Collision check
-          if (ovoCollider.intersectsBox(this.robotCollider)) {
+          if (ovoCollider.intersectsBox(robotCollider)) {
             var ovoType = ovo.ovoType;
 
             if (ovoType === 0) {    // ovo damages the robot
@@ -227,7 +231,7 @@ class TheScene extends THREE.Scene {
           // // Helps to visualize object colliders
           // var ovoColliderView = new THREE.Box3Helper(ovoCollider, 0xffff00);
           // this.add(ovoColliderView);
-          // var robotColliderView = new THREE.Box3Helper(this.robotCollider, 0xffff00);
+          // var robotColliderView = new THREE.Box3Helper(robotCollider, 0xffff00);
           // this.add(robotColliderView);
 
           /* --------------- NOTA ---------------
@@ -301,19 +305,57 @@ class TheScene extends THREE.Scene {
       case TheScene.TURN_RIGHT:
         this.robot.rotation.y -= degToRad(10);
         this.robot.currentRotation -= 10;
-        this.robot.substractEnergy(1);
+        // this.robot.substractEnergy(1);
         this.energyBar.setToEnergy(this.robot.currentEnergy);
         break;
       case TheScene.TURN_LEFT:
         this.robot.rotation.y += degToRad(10);
         this.robot.currentRotation += 10;
-        this.robot.substractEnergy(1);
+        // this.robot.substractEnergy(1);
         this.energyBar.setToEnergy(this.robot.currentEnergy);
         break;
     }
   }
+  
+  // Sets the game difficulty
+  setDifficulty(level) {
+    level = Math.floor(level);
 
+    if (level != this.difficulty) {
+      this.difficulty = level;
+
+      if (this.difficulty <= 1.9) {
+        this.MAX_NUMBER_OVO = 10;
+        console.log("NIVEL UNO");
+      } else if (this.difficulty <= 2.9) {
+        this.MAX_NUMBER_OVO = 20;
+        console.log("NIVEL DOS");
+      } else {
+        this.MAX_NUMBER_OVO = 40;
+        console.log("NIVEL TRES");
+      }
+
+      if (this.currentOvo > this.MAX_NUMBER_OVO) {
+        for (let index = 0; index < this.ovoList.length; index++) {
+          this.model.remove(this.ovoList[index]);
+          this.ovoList[index] = 0;
+        }
+
+        this.currentOvo = 0;
+
+        let contList = 0;
+        while (contList < (Math.floor(this.MAX_NUMBER_OVO * 0.2))) {
+          const rand = Math.floor(Math.random() * 20);
+          if (this.ovoList[rand] !== 1) {
+            this.ovoList[rand] = 1;
+            contList++;
+          }
+        }
+      }
+    }
+  }
 }
+
 
 // class variables
 

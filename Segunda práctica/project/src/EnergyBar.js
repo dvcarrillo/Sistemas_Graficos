@@ -40,27 +40,27 @@ class EnergyBar extends THREE.Object3D {
     // Updates the bar width and color
     setToEnergy(currentEnergy) {
         this.remove(this.barObject);
-
-        if (currentEnergy < 1)
-            currentEnergy = 0.0;
-        else if (currentEnergy > 100)
-            currentEnergy = 100;
-
-        var newColor;
-        if (currentEnergy > 50) 
-            newColor = this.highColor;
-        else if (currentEnergy > 20) 
-            newColor = this.mediumColor;
-        else
-            newColor = this.lowColor;
         
-        var barGeometry = new THREE.BoxGeometry(10, 10, currentEnergy * 2);
-        var barObject = new THREE.Mesh(barGeometry, newColor);
+        if (currentEnergy > 0) {
+            if (currentEnergy > 100)
+                currentEnergy = 100;
 
-        barObject.translateX(150);
-        barObject.translateY(50);
+            var newColor;
+            if (currentEnergy > 50) 
+                newColor = this.highColor;
+            else if (currentEnergy > 20) 
+                newColor = this.mediumColor;
+            else
+                newColor = this.lowColor;
+            
+            var barGeometry = new THREE.BoxGeometry(10, 10, currentEnergy * 2);
+            var barObject = new THREE.Mesh(barGeometry, newColor);
 
-        this.barObject = barObject;
-        this.add(this.barObject);
+            barObject.translateX(150);
+            barObject.translateY(50);
+
+            this.barObject = barObject;
+            this.add(this.barObject);
+        }
     }
 }
