@@ -1,8 +1,12 @@
-
 /// The Model Facade class. The root node of the graph.
 /**
  * @param renderer - The renderer to visualize the scene
  */
+// Converts angles in degrees to angles in radians
+function degToRad(degrees) {
+  return degrees * Math.PI / 180;
+}
+
 class TheScene extends THREE.Scene {
 
   constructor(renderer) {
@@ -13,7 +17,6 @@ class TheScene extends THREE.Scene {
     this.currentOvo = 0;
 
     // Attributes
-
     this.ambientLight = null;
     this.spotLight = null;
     this.camera = null;
@@ -25,7 +28,7 @@ class TheScene extends THREE.Scene {
     this.ovoList = new Array(this.MAX_NUMBER_OVO).fill(0); // 0:bad, 1: good
 
     this.energyBar = null;
-    
+
     let contList = 0;
     while (contList < (Math.floor(this.MAX_NUMBER_OVO * 0.2))) {
       const rand = Math.floor(Math.random() * 20);
@@ -73,7 +76,7 @@ class TheScene extends THREE.Scene {
     this.spotLight.position.set(60, 60, 40);
     this.spotLight.castShadow = true;
     // the shadow resolution
-    this.spotLight.shadow.mapSize.width = 2048
+    this.spotLight.shadow.mapSize.width = 2048;
     this.spotLight.shadow.mapSize.height = 2048;
     this.add(this.spotLight);
   }
@@ -92,19 +95,19 @@ class TheScene extends THREE.Scene {
     //model.add (this.crane);
     this.robot = new Robot({});
     this.robot.translateX(-100);
-    this.robot.rotateY(Math.PI / 2);
+    this.robot.rotateY(degToRad(90));
 
     // Robot collider
     this.robotCollider = new THREE.Box3();
     this.robotCollider.setFromObject(this.robot);
-    
+
     // Energy bar
     this.energyBar = new EnergyBar({});
 
     model.add(this.robot);
     model.add(this.energyBar);
     this.ground = new Ground(300, 300, new THREE.MeshPhongMaterial({ map: ground_texture }), 4);
-    this.sky = new Sky({background: new THREE.MeshBasicMaterial({ map: sky_texture })});
+    this.sky = new Sky({ background: new THREE.MeshBasicMaterial({ map: sky_texture }) });
     model.add(this.ground);
     model.add(this.sky);
 
@@ -173,7 +176,7 @@ class TheScene extends THREE.Scene {
     this.robot.setHeadRotation(controls.rotationHead);
     this.robot.setBodyRotation(controls.rotationBody);
     this.robot.setLegsScale(controls.scaleLegs);
-    
+
     if (this.currentOvo < this.MAX_NUMBER_OVO) {
       // 30% of chance for generating an Ovo object
       if (Math.floor(Math.random() * 9) < 1) {
@@ -181,7 +184,7 @@ class TheScene extends THREE.Scene {
         this.currentOvo++;
       }
     }
-    
+
     // Siguiente paso en el movimiento de todos los objetos
     TWEEN.update();
 
@@ -199,18 +202,18 @@ class TheScene extends THREE.Scene {
           // Ovo collider creation
           var ovoCollider = new THREE.Box3();
           ovoCollider.setFromObject(ovo);
-          
+
           // Collision check
           if (ovoCollider.intersectsBox(this.robotCollider)) {
             var ovoType = ovo.ovoType;
-            
+
             if (ovoType === 0) {    // ovo damages the robot
               this.robot.substractEnergy(ovo.damage);
               this.energyBar.setToEnergy(this.robot.currentEnergy);
             }
             else {                  // ovo benefits the robot
               this.robot.addPoints(ovo.addPoints);
-              this.robot.addEnergy();
+              this.robot.addEnergy(ovo.addEnergy);
               this.energyBar.setToEnergy(this.robot.currentEnergy);
 
               // // Check death from robot
@@ -237,8 +240,8 @@ class TheScene extends THREE.Scene {
   }
 
   /// Generates an ovo object in the scene
-  generateOvo(){
-    const ovo = new Ovo({type: this.ovoList[this.currentOvo]});
+  generateOvo() {
+    const ovo = new Ovo({ type: this.ovoList[this.currentOvo] });
 
     this.ovoList[this.currentOvo] = ovo;
     this.model.add(ovo);
@@ -269,22 +272,59 @@ class TheScene extends THREE.Scene {
     this.camera.updateProjectionMatrix();
   }
 
+  moveRobot(action) {
+    switch (action) {
+      case TheScene.MOVE_FORWARD:
+        this.robot.position.x += 2 * Math.cos(degToRad(this.robot.currentRotation));
+        this.robot.position.z -= 2 * Math.sin(degToRad(this.robot.currentRotation));
+        if (this.robot.position.x > 150 || this.robot.position.x < -150 || this.robot.position.z > 150 || this.robot.position.z < -150) {
+          this.robot.substractEnergy(this.robot.currentEnergy);
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
+        else {
+          this.robot.substractEnergy(1);
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
+        break;
+      case TheScene.MOVE_BACKWARD:
+        this.robot.position.x -= 2 * Math.cos(degToRad(this.robot.currentRotation));
+        this.robot.position.z += 2 * Math.sin(degToRad(this.robot.currentRotation));
+        if (this.robot.position.x > 150 || this.robot.position.x < -150 || this.robot.position.z > 150 || this.robot.position.z < -150) {
+          this.robot.substractEnergy(this.robot.currentEnergy);
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
+        else {
+          this.robot.substractEnergy(1);
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
+        break;
+      case TheScene.TURN_RIGHT:
+        this.robot.rotation.y -= degToRad(10);
+        this.robot.currentRotation -= 10;
+        this.robot.substractEnergy(1);
+        this.energyBar.setToEnergy(this.robot.currentEnergy);
+        break;
+      case TheScene.TURN_LEFT:
+        this.robot.rotation.y += degToRad(10);
+        this.robot.currentRotation += 10;
+        this.robot.substractEnergy(1);
+        this.energyBar.setToEnergy(this.robot.currentEnergy);
+        break;
+    }
+  }
+
 }
 
 // class variables
 
 // Application modes
 TheScene.NO_ACTION = 0;
-TheScene.ADDING_BOXES = 1;
-TheScene.MOVING_BOXES = 2;
-TheScene.DELETING_BOXES = 3;
 
 // Actions
-TheScene.NEW_BOX = 0;
-TheScene.MOVE_BOX = 1;
-TheScene.SELECT_BOX = 2;
-TheScene.ROTATE_BOX = 3;
-TheScene.DELETE_BOX = 4;
+TheScene.MOVE_FORWARD = 0;
+TheScene.MOVE_BACKWARD = 1;
+TheScene.TURN_RIGHT = 2;
+TheScene.TURNING_LEFT = 3;
 TheScene.END_ACTION = 10;
 
 

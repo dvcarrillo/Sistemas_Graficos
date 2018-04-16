@@ -66,9 +66,9 @@ function createGUI(withStats) {
   //   });
 
   var robotControls = gui.addFolder('Robot Controls');
-    robotControls.add(GUIcontrols, 'scaleLegs', 1, 1.2, 0.1).name('Leg scale (%)');
-    robotControls.add(GUIcontrols, 'rotationHead', -80, 80, 0.1).name('Head rotation');
-    robotControls.add(GUIcontrols, 'rotationBody', -45, 30, 0.1).name('Body rotation');
+  robotControls.add(GUIcontrols, 'scaleLegs', 1, 1.2, 0.1).name('Leg scale (%)');
+  robotControls.add(GUIcontrols, 'rotationHead', -80, 80, 0.1).name('Head rotation');
+  robotControls.add(GUIcontrols, 'rotationBody', -45, 30, 0.1).name('Body rotation');
 
   // The method  listen()  allows the height attribute to be written, not only read
 
@@ -204,6 +204,36 @@ function onMouseWheel(event) {
   }
 }
 
+function onKeyDown(event) {
+  switch (event.keyCode) {
+    case 37:  //left arrow
+      scene.moveRobot(TheScene.TURN_LEFT);
+      break;
+    case 38:  //up arrow
+      scene.moveRobot(TheScene.MOVE_FORWARD);
+      break;
+    case 39:  //right arrow
+      scene.moveRobot(TheScene.TURN_RIGHT);
+      break;
+    case 40:  //down arrow
+      scene.moveRobot(TheScene.MOVE_BACKWARD);
+      break;
+  }
+}
+
+function onKeyUp(event) {
+  switch (event.keyCode) {
+    case 37:  //left arrow
+      break;
+    case 38:  //up arrow
+      break;
+    case 39:  //right arrow
+      break;
+    case 40:  //down arrow
+      break;
+  }
+}
+
 /// It processes the window size changes
 function onWindowResize() {
   scene.setCameraAspect(window.innerWidth / window.innerHeight);
@@ -251,6 +281,8 @@ $(function () {
   window.addEventListener("mouseup", onMouseUp, true);
   window.addEventListener("mousewheel", onMouseWheel, true);      // For Chrome an others
   window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
+  window.addEventListener("keydown", onKeyDown, false);
+  window.addEventListener("keyup", onKeyUp, false);
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new TheScene(renderer.domElement);
