@@ -46,6 +46,7 @@ class Robot extends THREE.Object3D {
 
         this.currentEnergy = this.MAX_ROBOT_ENERGY;
         this.currentPoints = 0;
+        this.currentRotation = 0;
         this.isDead = this.currentEnergy < 0 ? true : false;
 
         // Robot movement properties
@@ -60,7 +61,7 @@ class Robot extends THREE.Object3D {
         // this.posX = 0;
         // this.posZ = 0;
         // this.movSpeed = 1;
-        
+
         // Objects that compose the robot
         this.rightFoot = this.createFoot(-1);
         this.leftFoot = this.createFoot(1);
@@ -70,7 +71,7 @@ class Robot extends THREE.Object3D {
         this.leftShoulder;
         this.body;
         this.head;
-        
+
         // this.add(this.body);
         this.add(this.rightFoot);
         this.add(this.leftFoot);
@@ -92,7 +93,7 @@ class Robot extends THREE.Object3D {
         // Positions the body over the axis
         body.translateX((-(bodyRadius)) - (this.legHeight * 0.125 / 2));
         body.translateY(-(this.bodyHeight / 2) + (this.headRadius / 2) + (0.25 * this.legHeight));
-        
+
         body.castShadow = true;
         this.body = body;
         body.add(this.createHead());
@@ -132,7 +133,7 @@ class Robot extends THREE.Object3D {
         eye.position.y = this.headRadius / 2;
         eye.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / 3));
         eye.position.z = this.headRadius * 0.85;
-        
+
         return eye;
     }
 
@@ -169,9 +170,9 @@ class Robot extends THREE.Object3D {
         let femurRadius = this.legHeight * 0.09375 * 0.5;
         let legGeometry = new THREE.CylinderGeometry(femurRadius, femurRadius, femurLength, precision);
         let femur = new THREE.Mesh(legGeometry, this.material);
-        
+
         femur.castShadow = true;
-        
+
         if (side >= 0)
             this.leftFemur = femur;
         else
@@ -197,7 +198,7 @@ class Robot extends THREE.Object3D {
         }
         else
             this.rightShoulder = shoulder;
-        
+
         return shoulder;
     }
 
@@ -207,77 +208,83 @@ class Robot extends THREE.Object3D {
 
     // Sets the head angle
     setHeadRotation(headRotation) {
-        let rotation = headRotation;
-        if (rotation > this.MAX_HEAD_ANGLE) {
-            rotation = this.MAX_HEAD_ANGLE;
-        } else if (rotation < this.MIN_HEAD_ANGLE) {
-            rotation = this.MIN_HEAD_ANGLE;
-        }
-        rotation = degToRad(rotation);
+        if (!this.isDead) {
+            let rotation = headRotation;
+            if (rotation > this.MAX_HEAD_ANGLE) {
+                rotation = this.MAX_HEAD_ANGLE;
+            } else if (rotation < this.MIN_HEAD_ANGLE) {
+                rotation = this.MIN_HEAD_ANGLE;
+            }
+            rotation = degToRad(rotation);
 
-        this.head.rotation.y = rotation;
+            this.head.rotation.y = rotation;
+        }
     }
 
     // Sets the body angle
     setBodyRotation(bodyRotation) {
-        let rotation = bodyRotation;
-        if (rotation > this.MAX_BODY_ANGLE) {
-            rotation = this.MAX_BODY_ANGLE;
-        } else if (rotation < this.MIN_BODY_ANGLE) {
-            rotation = this.MIN_BODY_ANGLE;
-        }
-        rotation = degToRad(rotation);
+        if (!this.isDead) {
+            let rotation = bodyRotation;
+            if (rotation > this.MAX_BODY_ANGLE) {
+                rotation = this.MAX_BODY_ANGLE;
+            } else if (rotation < this.MIN_BODY_ANGLE) {
+                rotation = this.MIN_BODY_ANGLE;
+            }
+            rotation = degToRad(rotation);
 
-        this.body.rotation.x = rotation;
+            this.body.rotation.x = rotation;
+        }
     }
 
     // Sets the leg length
     setLegsScale(extraLength) {
-        let stretch = extraLength;        
-        if (stretch > this.MAX_LEG_STRETCH) {
-            stretch = this.MAX_LEG_STRETCH;
-        } else if (stretch < this.MIN_LEG_STRETCH) {
-            stretch = this.MIN_LEG_STRETCH;
-        }
+        if (!this.isDead) {
+            let stretch = extraLength;
+            if (stretch > this.MAX_LEG_STRETCH) {
+                stretch = this.MAX_LEG_STRETCH;
+            } else if (stretch < this.MIN_LEG_STRETCH) {
+                stretch = this.MIN_LEG_STRETCH;
+            }
 
-        this.rightFemur.scale.set(1, stretch, 1);
-        this.rightFemur.position.y = this.legHeight * 0.75 / 2;
-        this.leftFemur.scale.set(1, stretch, 1);
-        this.leftFemur.position.y = this.legHeight * 0.75 / 2;
-        
-        this.rightShoulder.position.y = (this.legHeight * 0.75) * stretch;
-        this.leftShoulder.position.y = (this.legHeight * 0.75) * stretch;
+            this.rightFemur.scale.set(1, stretch, 1);
+            this.rightFemur.position.y = this.legHeight * 0.75 / 2;
+            this.leftFemur.scale.set(1, stretch, 1);
+            this.leftFemur.position.y = this.legHeight * 0.75 / 2;
+
+            this.rightShoulder.position.y = (this.legHeight * 0.75) * stretch;
+            this.leftShoulder.position.y = (this.legHeight * 0.75) * stretch;
+        }
     }
 
     // Substacts from currentEnergy the indicated amount
     substractEnergy(damage) {
-        this.currentEnergy -= damage;
-        
-        console.log("Arrrrr!!!!! Nuestro intrepido grumete ha sido herido! (" + this.currentEnergy + " pts. de energia restante)");
+        if (!this.isDead) {
+            this.currentEnergy -= damage;
 
-        if (this.currentEnergy <= 0) {
-            this.isDead = true;
-            console.log("AL ENCHUFE!");
+            console.log("Arrrrr!!!!! Nuestro intrepido grumete ha sido herido! (" + this.currentEnergy + " pts. de energia restante)");
+
+            if (this.currentEnergy <= 0) {
+                this.isDead = true;
+                console.log("AL ENCHUFE!");
+            }
+            /* Check then death from TheScene.js */
         }
-        /* Check then death from TheScene.js */
     }
 
     // Adds energy to the robot
-    addEnergy() {
-        if (this.currentPoints < 5) {
-            this.currentEnergy += 5 - this.currentPoints;
-            
-            if (this.currentEnergy > this.MAX_ROBOT_ENERGY)
-                this.currentEnergy = this.MAX_ROBOT_ENERGY;
-
+    addEnergy(energy) {
+        if (!this.isDead) {
+            this.currentEnergy = this.currentEnergy + energy > this.MAX_ROBOT_ENERGY? this.MAX_ROBOT_ENERGY : this.currentEnergy + energy;
             console.log("SE HA RECUPERADO ENERGIA!!!! ( " + this.currentEnergy + " pts. de energia)");
         }
     }
 
     // Adds the indicated amount of points
     addPoints(points) {
-        this.currentPoints += points;
-        console.log("Toma toma pepinaso (esferico)!! Y me lo como yo yo yo!! (" + this.currentPoints + " puntos acumulados)");
+        if (!this.isDead) {
+            this.currentPoints += points;
+            console.log("Toma toma pepinaso (esferico)!! Y me lo como yo yo yo!! (" + this.currentPoints + " puntos acumulados)");
+        }
     }
-    
+
 }

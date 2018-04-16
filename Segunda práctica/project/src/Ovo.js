@@ -35,6 +35,7 @@ class Ovo extends THREE.Object3D {
         // Effects over the Robot
         this.damage = 10;                               // Amount of life points to substract to Robot's currentLife
         this.addPoints = null;                          // Amount of life points to add to Robot's currentLife
+        this.addEnergy = null;
         
         this.add(this.ovoObject);
     }
@@ -67,6 +68,7 @@ class Ovo extends THREE.Object3D {
             .onStart(() => {
                 this.recover();
                 this.addPoints = intRandomNumber(0, 5);
+                this.addEnergy = 5 - this.addPoints;
                 object.position.y = position.y;
                 object.position.z = position.z;
             })
@@ -86,6 +88,7 @@ class Ovo extends THREE.Object3D {
             .onStart(() => {
                 this.recover();
                 this.addPoints = intRandomNumber(0, 5);
+                this.addEnergy = 5 - this.addPoints;
                 object.position.y = position.y;
                 object.position.z = position.z;
             })
