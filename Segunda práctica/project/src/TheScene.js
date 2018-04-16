@@ -76,7 +76,7 @@ class TheScene extends THREE.Scene {
     this.spotLight.position.set(60, 60, 40);
     this.spotLight.castShadow = true;
     // the shadow resolution
-    this.spotLight.shadow.mapSize.width = 2048
+    this.spotLight.shadow.mapSize.width = 2048;
     this.spotLight.shadow.mapSize.height = 2048;
     this.add(this.spotLight);
   }
@@ -277,30 +277,38 @@ class TheScene extends THREE.Scene {
       case TheScene.MOVE_FORWARD:
         this.robot.position.x += 2 * Math.cos(degToRad(this.robot.currentRotation));
         this.robot.position.z -= 2 * Math.sin(degToRad(this.robot.currentRotation));
-        if (this.robot.position.x > 150 || this.robot.position.x < -150 || this.robot.position.z > 150 || this.robot.position.z < -150)
+        if (this.robot.position.x > 150 || this.robot.position.x < -150 || this.robot.position.z > 150 || this.robot.position.z < -150) {
           this.robot.substractEnergy(this.robot.currentEnergy);
-        else 
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
+        else {
           this.robot.substractEnergy(1);
-
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
         break;
       case TheScene.MOVE_BACKWARD:
         this.robot.position.x -= 2 * Math.cos(degToRad(this.robot.currentRotation));
         this.robot.position.z += 2 * Math.sin(degToRad(this.robot.currentRotation));
-        if (this.robot.position.x > 150 || this.robot.position.x < -150 || this.robot.position.z > 150 || this.robot.position.z < -150)
+        if (this.robot.position.x > 150 || this.robot.position.x < -150 || this.robot.position.z > 150 || this.robot.position.z < -150) {
           this.robot.substractEnergy(this.robot.currentEnergy);
-        else 
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
+        else {
           this.robot.substractEnergy(1);
-
+          this.energyBar.setToEnergy(this.robot.currentEnergy);
+        }
         break;
       case TheScene.TURN_RIGHT:
         this.robot.rotation.y -= degToRad(10);
         this.robot.currentRotation -= 10;
         this.robot.substractEnergy(1);
+        this.energyBar.setToEnergy(this.robot.currentEnergy);
         break;
       case TheScene.TURN_LEFT:
         this.robot.rotation.y += degToRad(10);
         this.robot.currentRotation += 10;
         this.robot.substractEnergy(1);
+        this.energyBar.setToEnergy(this.robot.currentEnergy);
         break;
     }
   }

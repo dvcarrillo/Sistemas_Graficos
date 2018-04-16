@@ -26,7 +26,11 @@ class Robot extends THREE.Object3D {
         // If no parameters are specified, use default values
         this.robotHeight = (parameters.robotHeight === undefined ? 21 : parameters.robotHeight);
         this.robotWidth = (parameters.robotWidth === undefined ? 12.5 : parameters.robotWidth);
-        this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({ color: 0xcaccce, specular: 0xbac3d6, shininess: 70 }) : parameters.material);
+        this.materialBody = (parameters.materialBody === undefined ? new THREE.MeshPhongMaterial({ color: 0xcaccce, specular: 0xffffff, shininess: 0 }) : parameters.materialBody);
+        this.materialShoulder = (parameters.materialShoulder === undefined ? new THREE.MeshPhongMaterial({ color: 0x0000ff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialShoulder);
+        this.materialFoot = (parameters.materialFoot === undefined ? new THREE.MeshPhongMaterial({ color: 0x0000ff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialFoot);
+        this.materialHead = (parameters.materialHead === undefined ? new THREE.MeshPhongMaterial({ color: 0x0000ff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialHead);
+        this.materialFemur = (parameters.materialFemur === undefined ? new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialFemur);
 
         // Calculates the height of different parts
         /**
@@ -88,7 +92,7 @@ class Robot extends THREE.Object3D {
 
         // Creates the base cylinder
         var bodyGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, this.bodyHeight, precision)
-        var body = new THREE.Mesh(bodyGeometry, this.material);
+        var body = new THREE.Mesh(bodyGeometry, this.materialBody);
 
         // Positions the body over the axis
         body.translateX((-(bodyRadius)) - (this.legHeight * 0.125 / 2));
@@ -107,11 +111,19 @@ class Robot extends THREE.Object3D {
 
         // Creates the base sphere
         var headGeometry = new THREE.SphereGeometry(this.headRadius, precision, precision);
-        var head = new THREE.Mesh(headGeometry, this.material);
+        var head = new THREE.Mesh(headGeometry, this.materialHead);
 
         // Positions the head over the body
         head.castShadow = true;
         head.position.y = this.bodyHeight / 2;
+
+        var headSpotLight = new THREE.SpotLight(0xff0000, 2, 15, degToRad(30));
+        headSpotLight.position.set(-90, 10, 0);
+        headSpotLight.castShadow = true;
+        headSpotLight.shadow.mapSize.width = 2048;
+        headSpotLight.shadow.mapSize.height = 2048;
+        this.add(headSpotLight);
+
         head.add(this.createEye());
         this.head = head;
 
@@ -126,7 +138,7 @@ class Robot extends THREE.Object3D {
 
         // Creates the base sphere
         var eyeGeometry = new THREE.CylinderGeometry(eyeRadius, eyeRadius, eyeHeight, precision, precision);
-        var eye = new THREE.Mesh(eyeGeometry, this.material);
+        var eye = new THREE.Mesh(eyeGeometry, new THREE.MeshPhongMaterial({ color: 0x000000, specular: 0xbac3d6, shininess: 70 }));
 
         // Positions the eye in the head
         eye.castShadow = true;
@@ -149,7 +161,7 @@ class Robot extends THREE.Object3D {
         let radiusTop = footHeight / 2;
         let radiusBottom = this.legHeight * 0.1875 / 2;
         let footGeometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, footHeight, precision);
-        let foot = new THREE.Mesh(footGeometry, this.material);
+        let foot = new THREE.Mesh(footGeometry, this.materialFoot);
 
         foot.position.y = this.legHeight * 0.125 / 2;
         foot.position.x = side * ((this.bodyWidth / 2) + (this.legHeight * 0.125 / 2));
@@ -169,7 +181,7 @@ class Robot extends THREE.Object3D {
         let femurLength = this.legHeight * 0.75;
         let femurRadius = this.legHeight * 0.09375 * 0.5;
         let legGeometry = new THREE.CylinderGeometry(femurRadius, femurRadius, femurLength, precision);
-        let femur = new THREE.Mesh(legGeometry, this.material);
+        let femur = new THREE.Mesh(legGeometry, this.materialFemur);
 
         femur.castShadow = true;
 
@@ -187,7 +199,7 @@ class Robot extends THREE.Object3D {
     createShoulder(side) {
         let shoulderDimensions = this.legHeight * 0.125;
         let shoulderGeometry = new THREE.BoxGeometry(shoulderDimensions, shoulderDimensions, shoulderDimensions);
-        let shoulder = new THREE.Mesh(shoulderGeometry, this.material);
+        let shoulder = new THREE.Mesh(shoulderGeometry, this.materialShoulder);
 
         shoulder.castShadow = true;
         shoulder.position.y = (this.legHeight * 0.75 / 2) + (shoulderDimensions / 2);
@@ -274,7 +286,7 @@ class Robot extends THREE.Object3D {
     // Adds energy to the robot
     addEnergy(energy) {
         if (!this.isDead) {
-            this.currentEnergy = this.currentEnergy + energy > this.MAX_ROBOT_ENERGY? this.MAX_ROBOT_ENERGY : this.currentEnergy + energy;
+            this.currentEnergy = this.currentEnergy + energy > this.MAX_ROBOT_ENERGY ? this.MAX_ROBOT_ENERGY : this.currentEnergy + energy;
             console.log("SE HA RECUPERADO ENERGIA!!!! ( " + this.currentEnergy + " pts. de energia)");
         }
     }
