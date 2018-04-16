@@ -22,11 +22,15 @@ class Ovo extends THREE.Object3D {
     constructor(parameters) {
         super();
 
+        var loader = new THREE.TextureLoader();
+        var energyTexture = loader.load('../img/energy.jpg');
+        var damageTexture = loader.load('../img/damage.jpg');
+
         this.ovoRadius = (parameters.ovoRadius === undefined ? 2 : parameters.ovoRadius);
         this.ovoType = parameters.type;     // 0:bad, 1: good
         this.material = (parameters.type === 0 ?
-            new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xfbf804, shininess: 0 })
-            : new THREE.MeshPhongMaterial({ color: 0x00ff00, specular: 0xfbf804, shininess: 0 }));
+            new THREE.MeshPhongMaterial({ map: damageTexture })
+            : new THREE.MeshPhongMaterial({ map: energyTexture }));
 
         // Object properties
         this.ovoObject = this.createObject();
@@ -37,6 +41,7 @@ class Ovo extends THREE.Object3D {
         this.addPoints = null;                          // Amount of life points to add to Robot's currentLife
         this.addEnergy = null;
         
+        this.ovoObject.rotation.y = Math.PI;
         this.add(this.ovoObject);
     }
 

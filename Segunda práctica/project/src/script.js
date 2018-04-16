@@ -72,7 +72,7 @@ function createGUI(withStats) {
   robotControls.add(GUIcontrols, 'rotationBody', -45, 30, 0.1).name('Body rotation');
 
   var difficultyControl = gui.addFolder('Game Difficulty');
-  difficultyControl.add(GUIcontrols, 'difficulty', 1, 3, 1).name('Difficulty');
+  difficultyControl.add(GUIcontrols, 'difficulty', 1, 3).name('Difficulty');
 
   // The method  listen()  allows the height attribute to be written, not only read
 

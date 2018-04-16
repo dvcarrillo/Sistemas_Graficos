@@ -23,14 +23,17 @@ class Robot extends THREE.Object3D {
     constructor(parameters) {
         super();
 
+        var loader = new THREE.TextureLoader();
+        this.metalTexture = loader.load('../img/metal.jpg');
+
         // If no parameters are specified, use default values
         this.robotHeight = (parameters.robotHeight === undefined ? 21 : parameters.robotHeight);
         this.robotWidth = (parameters.robotWidth === undefined ? 12.5 : parameters.robotWidth);
-        this.materialBody = (parameters.materialBody === undefined ? new THREE.MeshPhongMaterial({ color: 0xcaccce, specular: 0xffffff, shininess: 0 }) : parameters.materialBody);
-        this.materialShoulder = (parameters.materialShoulder === undefined ? new THREE.MeshPhongMaterial({ color: 0x0000ff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialShoulder);
-        this.materialFoot = (parameters.materialFoot === undefined ? new THREE.MeshPhongMaterial({ color: 0x0000ff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialFoot);
-        this.materialHead = (parameters.materialHead === undefined ? new THREE.MeshPhongMaterial({ color: 0x0000ff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialHead);
-        this.materialFemur = (parameters.materialFemur === undefined ? new THREE.MeshPhongMaterial({ color: 0xffffff, specular: 0xbac3d6, shininess: 0 }) : parameters.materialFemur);
+        this.materialBody = (parameters.materialBody === undefined ? new THREE.MeshPhongMaterial({ map: this.metalTexture }) : parameters.materialBody);
+        this.materialShoulder = (parameters.materialShoulder === undefined ? new THREE.MeshPhongMaterial({ map: this.metalTexture }) : parameters.materialShoulder);
+        this.materialFoot = (parameters.materialFoot === undefined ? new THREE.MeshPhongMaterial({ map: this.metalTexture }) : parameters.materialFoot);
+        this.materialHead = (parameters.materialHead === undefined ? new THREE.MeshPhongMaterial({ map: this.metalTexture }) : parameters.materialHead);
+        this.materialFemur = (parameters.materialFemur === undefined ? new THREE.MeshPhongMaterial({ map: this.metalTexture }) : parameters.materialFemur);
 
         // Calculates the height of different parts
         /**
@@ -131,7 +134,7 @@ class Robot extends THREE.Object3D {
 
         // Creates the base sphere
         var eyeGeometry = new THREE.CylinderGeometry(eyeRadius, eyeRadius, eyeHeight, precision, precision);
-        var eye = new THREE.Mesh(eyeGeometry, new THREE.MeshPhongMaterial({ color: 0x000000, specular: 0xbac3d6, shininess: 70 }));
+        var eye = new THREE.Mesh(eyeGeometry, new THREE.MeshPhongMaterial({ map: this.metalTexture }));
 
         // Positions the eye in the head
         eye.castShadow = true;
@@ -280,7 +283,6 @@ class Robot extends THREE.Object3D {
     addEnergy(energy) {
         if (!this.isDead) {
             this.currentEnergy = this.currentEnergy + energy > this.MAX_ROBOT_ENERGY ? this.MAX_ROBOT_ENERGY : this.currentEnergy + energy;
-            console.log("SE HA RECUPERADO ENERGIA!!!! ( " + this.currentEnergy + " pts. de energia)");
         }
     }
 
@@ -288,7 +290,6 @@ class Robot extends THREE.Object3D {
     addPoints(points) {
         if (!this.isDead) {
             this.currentPoints += points;
-            console.log("Toma toma pepinaso (esferico)!! Y me lo como yo yo yo!! (" + this.currentPoints + " puntos acumulados)");
         }
     }
 
