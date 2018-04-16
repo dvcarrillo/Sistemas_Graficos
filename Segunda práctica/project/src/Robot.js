@@ -117,13 +117,6 @@ class Robot extends THREE.Object3D {
         head.castShadow = true;
         head.position.y = this.bodyHeight / 2;
 
-        var headSpotLight = new THREE.SpotLight(0xff0000, 2, 15, degToRad(30));
-        headSpotLight.position.set(-90, 10, 0);
-        headSpotLight.castShadow = true;
-        headSpotLight.shadow.mapSize.width = 2048;
-        headSpotLight.shadow.mapSize.height = 2048;
-        this.add(headSpotLight);
-
         head.add(this.createEye());
         this.head = head;
 
