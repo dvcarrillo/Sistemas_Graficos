@@ -84,7 +84,7 @@ class Robot extends THREE.Object3D {
 
         // Create the light and the target where the light is looking at
         this.headLight = new THREE.SpotLight(0xFFFFFF, 3, 100, degToRad(30), 0.5);
-        this.headLight.position.set(0, this.robotHeight, 4);
+        this.headLight.position.set(0, this.robotHeight+1, 7);
         this.headLight.castShadow = true;
         this.target = new THREE.Object3D();
         this.target.position.set(0, 0, 25);

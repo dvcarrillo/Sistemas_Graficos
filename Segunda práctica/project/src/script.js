@@ -1,3 +1,10 @@
+/**
+ * Script
+ * It adds the listeners to the scene and controls the animation
+ * 
+ * @author David Vargas, Andres Molina
+ * 
+ */
 
 // Several functions, including the main
 
@@ -12,9 +19,6 @@ GUIcontrols = null;
 // The object for the statistics
 stats = null;
 
-// A boolean to know if the left button of the mouse is down
-mouseDown = false;
-
 // The current mode of the application
 applicationMode = TheScene.NORMAL_CAMERA;
 
@@ -24,7 +28,6 @@ applicationMode = TheScene.NORMAL_CAMERA;
  */
 function createGUI(withStats) {
   GUIcontrols = new function () {
-    // this.axis = true;
     this.transform = true;
     this.rotationHead = 0;
     this.rotationBody = 0;
@@ -81,75 +84,10 @@ function setMessage(str) {
  * @param event - Mouse information
  */
 function onMouseDown(event) {
-  if (event.ctrlKey) {
-    // The Trackballcontrol only works if Ctrl key is pressed
+  if (applicationMode === TheScene.NORMAL_CAMERA) {
     scene.getCameraControls().enabled = true;
   } else {
     scene.getCameraControls().enabled = false;
-    if (event.button === 0) {   // Left button
-      mouseDown = true;
-      switch (applicationMode) {
-        case TheScene.ADDING_BOXES:
-          // scene.addBox (event, TheScene.NEW_BOX);
-          break;
-        case TheScene.MOVING_BOXES:
-          // scene.moveBox (event, TheScene.SELECT_BOX);
-          break;
-        case TheScene.DELETING_BOXES:
-          // scene.removeBox (event, TheScene.DELETE_BOX);
-          break;
-        default:
-          applicationMode = TheScene.NO_ACTION;
-          break;
-      }
-    } else {
-      setMessage("");
-      applicationMode = TheScene.NO_ACTION;
-    }
-  }
-}
-
-// It processes the drag of the mouse
-/**
- * @param event - Mouse information
- */
-function onMouseMove(event) {
-  if (mouseDown) {
-    switch (applicationMode) {
-      case TheScene.ADDING_BOXES:
-      case TheScene.MOVING_BOXES:
-        // scene.moveBox (event, TheScene.MOVE_BOX);
-        break;
-      case TheScene.DELETING_BOXES:
-        break;
-      default:
-        applicationMode = TheScene.NO_ACTION;
-        break;
-    }
-  }
-}
-
-// It processes the clic-up of the mouse
-/**
- * @param event - Mouse information
- */
-function onMouseUp(event) {
-  if (mouseDown) {
-    switch (applicationMode) {
-      case TheScene.ADDING_BOXES:
-        // scene.addBox (event, TheScene.END_ACTION);
-        break;
-      case TheScene.MOVING_BOXES:
-        // scene.moveBox (event, TheScene.END_ACTION);
-        break;
-      case TheScene.DELETING_BOXES:
-        // scene.removeBox (event, TheScene.END_ACTION);
-        break;
-      default:
-        applicationMode = TheScene.NO_ACTION;
-        break;
-    }
-    mouseDown = false;
   }
 }
 
@@ -158,24 +96,15 @@ function onMouseUp(event) {
  * @param event - Mouse information
  */
 function onMouseWheel(event) {
-  if (event.ctrlKey) {
-    // The Trackballcontrol only works if Ctrl key is pressed
+  if (applicationMode === TheScene.NORMAL_CAMERA) {
     scene.getCameraControls().enabled = true;
   } else {
     scene.getCameraControls().enabled = false;
-    if (mouseDown) {
-      switch (applicationMode) {
-        case TheScene.MOVING_BOXES:
-          // scene.moveBox (event, TheScene.ROTATE_BOX);
-          break;
-        case TheScene.ADDING_BOXES:
-          // scene.moveBox (event, TheScene.ROTATE_BOX);
-          break;
-      }
-    }
   }
 }
 
+
+// It processes when the keys are pressed down
 function onKeyDown(event) {
   switch (event.keyCode) {
     case 32:  //spacebar
@@ -249,21 +178,21 @@ function render() {
     start();
   else{
     stop();
-    window.alert("Game over! Refresh the page to restart the game\n· Total points: " + scene.robot.currentPoints);
+    alert("Game over! Refresh the page to restart the game\n· Total points: " + scene.robot.currentPoints);
   }
 }
 
 // It starts the render
 function start() {
   if (!requestID){
-    requestID = window.requestAnimationFrame(render);
+    requestID = requestAnimationFrame(render);
   }
 }
 
 // It stops the render
 function stop() {
   if (requestID) {
-    window.cancelAnimationFrame(requestID);
+    cancelAnimationFrame(requestID);
     requestID = undefined;
   }
 }
@@ -275,12 +204,10 @@ $(function () {
   // add the output of the renderer to the html element
   $("#WebGL-output").append(renderer.domElement);
   // liseners
-  window.addEventListener("resize", onWindowResize);
-  window.addEventListener("mousemove", onMouseMove, true);
   window.addEventListener("mousedown", onMouseDown, true);
-  window.addEventListener("mouseup", onMouseUp, true);
   window.addEventListener("mousewheel", onMouseWheel, true);      // For Chrome an others
   window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
+  window.addEventListener("resize", onWindowResize);
   window.addEventListener("keydown", onKeyDown, false);
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.

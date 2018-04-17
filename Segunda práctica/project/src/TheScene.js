@@ -1,11 +1,20 @@
-/// The Model Facade class. The root node of the graph.
 /**
- * @param renderer - The renderer to visualize the scene
+ * Scene class
+ * Represents all the elements in the scene
+ * The Model Facade class. The root node of the graph.
+ * 
+ * @author David Vargas, Andres Molina
+ * 
+ * @param renderer = The renderer to visualize the scene
+ * 
  */
+
 // Converts angles in degrees to angles in radians
 function degToRad(degrees) {
   return degrees * Math.PI / 180;
 }
+
+/**********************************************************************************/
 
 class TheScene extends THREE.Scene {
 
@@ -308,6 +317,3 @@ TheScene.MOVE_FORWARD = 0;
 TheScene.MOVE_BACKWARD = 1;
 TheScene.TURN_RIGHT = 2;
 TheScene.TURNING_LEFT = 3;
-TheScene.END_ACTION = 10;
-
-
