@@ -1,12 +1,12 @@
 
-/// The Ground class
 /**
- * @author FVelasco
+ * The Ground class
+ * 
+ * @author David Vargas, Andrés Molina
  * 
  * @param aWidth - The width of the ground
  * @param aDeep - The deep of the ground
  * @param aMaterial - The material of the ground
- * @param aBoxSize - The size for the boxes
  */
 
 class Ground extends THREE.Object3D {
@@ -28,5 +28,5 @@ class Ground extends THREE.Object3D {
     this.ground.autoUpdateMatrix = false;
     this.add(this.ground);
   }
-  
+
 }
