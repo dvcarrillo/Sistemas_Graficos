@@ -288,11 +288,8 @@ class Robot extends THREE.Object3D {
         if (!this.isDead) {
             this.currentEnergy -= damage;
 
-            console.log("Arrrrr!!!!! Nuestro intrepido grumete ha sido herido! (" + this.currentEnergy + " pts. de energia restante)");
-
             if (this.currentEnergy <= 0) {
                 this.isDead = true;
-                console.log("AL ENCHUFE!");
             }
             /* Check then death from TheScene.js */
         }

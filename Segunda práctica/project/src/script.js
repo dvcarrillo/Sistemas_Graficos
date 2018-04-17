@@ -30,43 +30,9 @@ function createGUI(withStats) {
     this.rotationBody = 0;
     this.scaleLegs = 1;
     this.difficulty = 1;
-    // this.addBox   = function () {
-    //   setMessage ("Añadir cajas clicando en el suelo");
-    //   applicationMode = TheScene.ADDING_BOXES;
-    // };
-    // this.moveBox  = function () {
-    //   setMessage ("Mover y rotar cajas clicando en ellas");
-    //   applicationMode = TheScene.MOVING_BOXES;
-    // };
-    // this.removeBox = () => {
-    //   setMessage ('Picha en una caja para eliminarla');
-    //   applicationMode = TheScene.DELETING_BOXES;
-    // }
-    // this.takeBox  = false;
   }
 
   var gui = new dat.GUI();
-  // var axisLights = gui.addFolder('Axis and Lights');
-  // axisLights.add(GUIcontrols, 'axis').name('Axis on/off :');
-
-  // var actions = gui.addFolder ('Actions');
-  //   var addingBoxes = actions.add(GUIcontrols, 'addBox').name (': Adding boxes :');
-  //   var movingBoxes = actions.add (GUIcontrols, 'moveBox').name (': Move and rotate boxes :');
-  //   var deletingBoxes = actions.add(GUIcontrols, 'removeBox').name (': Deleting boxes :');
-  //   var takingBoxes = actions.add (GUIcontrols, 'takeBox').name ('Take the box below');
-  //   takingBoxes.onChange (function (value) {
-  //       if (value) {
-  //       newHeight = scene.takeBox();
-  //         if (newHeight > 0) {
-  //             GUIcontrols.height = newHeight;
-  //             GUIcontrols.takeBox = true; 
-  //         } else {
-  //             GUIcontrols.takeBox = false;  
-  //         }
-  //       } else {
-  //         scene.dropBox ();
-  //       }
-  //   });
 
   var robotControls = gui.addFolder('Robot Controls');
   robotControls.add(GUIcontrols, 'scaleLegs', 1, 1.2, 0.1).name('Leg scale (%)');
@@ -246,13 +212,13 @@ function onKeyDown(event) {
   }
 }
 
-/// It processes the window size changes
+// It processes the window size changes
 function onWindowResize() {
   scene.setCameraAspect(window.innerWidth / window.innerHeight);
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-/// It creates and configures the WebGL renderer
+// It creates and configures the WebGL renderer
 /**
  * @return The renderer
  */
@@ -302,7 +268,7 @@ function stop() {
   }
 }
 
-/// The main function
+// The main function
 $(function () {
   // create a render and set the size
   renderer = createRenderer();

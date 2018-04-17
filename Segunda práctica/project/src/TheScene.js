@@ -92,9 +92,6 @@ class TheScene extends THREE.Scene {
     var loader = new THREE.TextureLoader();
     var ground_texture = loader.load('../img/iron.jpg');
     var sky_texture = loader.load('../img/mw.jpg');
-    //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({color: 0xff0000, specular: 0xfbf804, shininess: 70})});
-    //this.crane = new Crane({material: new THREE.MeshPhongMaterial ({map: ground_texture})});
-    //model.add (this.crane);
     this.robot = new Robot({});
     this.robot.translateX(-100);
     this.robot.rotateY(degToRad(90));
@@ -111,59 +108,6 @@ class TheScene extends THREE.Scene {
 
     return model;
   }
-
-  // // Public methods
-
-  // /// It adds a new box, or finish the action
-  // /**
-  //  * @param event - Mouse information
-  //  * @param action - Which action is requested to be processed: start adding or finish.
-  //  */
-  // addBox (event, action) {
-  //   this.ground.addBox(event, action);
-  // }
-
-  // /// It moves or rotates a box on the ground
-  // /**
-  //  * @param event - Mouse information
-  //  * @param action - Which action is requested to be processed: select a box, move it, rotate it or finish the action.
-  //  */
-  // moveBox (event, action) {
-  //   this.ground.moveBox (event, action);
-  // }
-
-  // //! It deletes a box
-  // /**
-  //  * @param event - Mouse information
-  //  * @param action - Which action is requested to be processed: select a box or finish the action.
-  //  */
-  // removeBox (event, action) {
-  //   this.ground.removeBox (event, action);
-  // }
-
-  // /// The crane can take a box
-  // /**
-  //  * @return The new height of the hook, on the top of the taken box. Zero if no box is taken
-  //  */
-  // takeBox () { 
-  //   var box = this.ground.takeBox (this.crane.getHookPosition());
-  //   if (box === null)
-  //     return 0; 
-  //   else 
-  //     return this.crane.takeBox (box); 
-  //   // The retuned height set the new limit to down the hook
-  // }
-
-  // /// The crane drops its taken box
-  // dropBox () {
-  //   var box = this.crane.dropBox ();
-  //   if (box !== null) {
-  //     box.position.copy (this.crane.getHookPosition());
-  //     box.position.y = 0;
-  //     this.ground.dropBox (box);
-  //   }
-  // }
-
 
   /// It sets the robot position according to the GUI
   /**
