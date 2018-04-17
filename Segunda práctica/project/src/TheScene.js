@@ -74,8 +74,8 @@ class TheScene extends THREE.Scene {
     this.add(this.ambientLight);
 
     // add spotlight for the shadows
-    this.spotLight = new THREE.SpotLight(0xffffff);
-    this.spotLight.position.set(60, 60, 40);
+    this.spotLight = new THREE.SpotLight(0xffffff, 0.3);
+    this.spotLight.position.set(150, 60, 0);
     this.spotLight.castShadow = true;
     // the shadow resolution
     this.spotLight.shadow.mapSize.width = 2048;
@@ -219,10 +219,6 @@ class TheScene extends THREE.Scene {
               this.robot.addPoints(ovo.addPoints);
               this.robot.addEnergy(ovo.addEnergy);
               this.energyBar.setToEnergy(this.robot.currentEnergy);
-
-              // // Check death from robot
-              // if (this.robot.isDead)
-              //   this.pauseGame();
             }
             ovo.hitRobot();
           }
@@ -233,11 +229,6 @@ class TheScene extends THREE.Scene {
           // this.add(ovoColliderView);
           // var robotColliderView = new THREE.Box3Helper(robotCollider, 0xffff00);
           // this.add(robotColliderView);
-
-          /* --------------- NOTA ---------------
-          * Implementar la muerte del robot y la consecuente pausa del juego!
-          * Recordar que no se podra mover en estado de pausa
-          */
         }
       });
     }
@@ -257,6 +248,11 @@ class TheScene extends THREE.Scene {
    */
   getCamera() {
     return this.camera;
+  }
+
+  // It returns the eye camera of the robot
+  getEyeCamera() {
+    return this.robot.eyeCamera;
   }
 
   /// It returns the camera controls
@@ -360,7 +356,8 @@ class TheScene extends THREE.Scene {
 // class variables
 
 // Application modes
-TheScene.NO_ACTION = 0;
+TheScene.NORMAL_CAMERA = 0;
+TheScene.EYE_CAMERA = 1;
 
 // Actions
 TheScene.MOVE_FORWARD = 0;

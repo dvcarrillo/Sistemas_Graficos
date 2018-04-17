@@ -3,6 +3,8 @@
 
 /// The scene graph
 scene = null;
+camera = null;
+requestID = null;
 
 /// The GUI information
 GUIcontrols = null;
@@ -14,7 +16,7 @@ stats = null;
 mouseDown = false;
 
 /// The current mode of the application
-applicationMode = TheScene.NO_ACTION;
+applicationMode = TheScene.NORMAL_CAMERA;
 
 /// It creates the GUI and, optionally, adds statistic information
 /**
@@ -210,30 +212,36 @@ function onMouseWheel(event) {
 
 function onKeyDown(event) {
   switch (event.keyCode) {
+    case 32:  //spacebar
+      if(!scene.robot.isDead) 
+        requestID? stop() : start();
+      break;
     case 37:  //left arrow
-      scene.moveRobot(TheScene.TURN_LEFT);
+      if (requestID && !scene.robot.isDead)
+        scene.moveRobot(TheScene.TURN_LEFT);
       break;
     case 38:  //up arrow
-      scene.moveRobot(TheScene.MOVE_FORWARD);
+      if (requestID && !scene.robot.isDead)
+        scene.moveRobot(TheScene.MOVE_FORWARD);
       break;
     case 39:  //right arrow
-      scene.moveRobot(TheScene.TURN_RIGHT);
+      if (requestID && !scene.robot.isDead)
+        scene.moveRobot(TheScene.TURN_RIGHT);
       break;
     case 40:  //down arrow
-      scene.moveRobot(TheScene.MOVE_BACKWARD);
+      if (requestID && !scene.robot.isDead)
+        scene.moveRobot(TheScene.MOVE_BACKWARD);
       break;
-  }
-}
-
-function onKeyUp(event) {
-  switch (event.keyCode) {
-    case 37:  //left arrow
-      break;
-    case 38:  //up arrow
-      break;
-    case 39:  //right arrow
-      break;
-    case 40:  //down arrow
+    case 86:  //key v
+      if (requestID && !scene.robot.isDead) {
+        if (applicationMode === TheScene.NORMAL_CAMERA) {
+          camera = scene.getEyeCamera();
+          applicationMode = TheScene.EYE_CAMERA;
+        } else {
+          camera = scene.getCamera();
+          applicationMode = TheScene.NORMAL_CAMERA;
+        }
+      }
       break;
   }
 }
@@ -258,7 +266,7 @@ function createRenderer() {
 
 /// It renders every frame
 function render() {
-  requestAnimationFrame(render);
+  requestID = undefined;
 
   stats.update();
   scene.getCameraControls().update();
@@ -269,7 +277,29 @@ function render() {
   else
     this.setMessage("DEAD");
 
-  renderer.render(scene, scene.getCamera());
+  renderer.render(scene, camera);
+
+  if(!scene.robot.isDead)
+    start();
+  else{
+    stop();
+    window.alert("Game over! Refresh the page to restart the game\n· Total points: " + scene.robot.currentPoints);
+  }
+}
+
+// It starts the render
+function start() {
+  if (!requestID){
+    requestID = window.requestAnimationFrame(render);
+  }
+}
+
+// It stops the render
+function stop() {
+  if (requestID) {
+    window.cancelAnimationFrame(requestID);
+    requestID = undefined;
+  }
 }
 
 /// The main function
@@ -286,12 +316,13 @@ $(function () {
   window.addEventListener("mousewheel", onMouseWheel, true);      // For Chrome an others
   window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
   window.addEventListener("keydown", onKeyDown, false);
-  window.addEventListener("keyup", onKeyUp, false);
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new TheScene(renderer.domElement);
+  camera = scene.getCamera();
+  requestID = undefined;
 
   createGUI(true);
 
-  render();
+  start();
 });

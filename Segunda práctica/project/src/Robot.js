@@ -79,9 +79,28 @@ class Robot extends THREE.Object3D {
         this.body;
         this.head;
 
-        // this.add(this.body);
         this.add(this.rightFoot);
         this.add(this.leftFoot);
+
+        // Create the light and the target where the light is looking at
+        this.headLight = new THREE.SpotLight(0xFFFFFF, 3, 100, degToRad(30), 0.5);
+        this.headLight.position.set(0, this.robotHeight, 4);
+        this.headLight.castShadow = true;
+        this.target = new THREE.Object3D();
+        this.target.position.set(0, 0, 25);
+        this.headLight.target = this.target;
+        this.headLight.shadow.mapSize.width = 2048;
+        this.headLight.shadow.mapSize.height = 2048;
+
+        // Add the light and the target to the robot
+        this.add(this.headLight);
+        this.add(this.target);
+
+        this.eyeCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.eyeCamera.position.set(0, this.robotHeight - 1, 3);
+        var look = new THREE.Vector3(0, this.robotHeight - 1, 10);
+        this.eyeCamera.lookAt(look);
+        this.add(this.eyeCamera);
     }
 
     /******************************************************************************/
