@@ -15,9 +15,7 @@ class Sky extends THREE.Object3D {
         
         // Sphere size
         this.sphereRadius = 500;
-        this.sphere = this.createSkybox();
-
-        this.add(this.sphere);
+        this.add(this.createSkybox());
     }
 
     // Creates the sky sphere
