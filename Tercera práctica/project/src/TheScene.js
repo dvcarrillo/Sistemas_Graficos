@@ -24,6 +24,8 @@ class TheScene extends THREE.Scene {
     this.camera = null;
     this.trackballControls = null;
 
+    this.platform = null;
+
     this.createLights();
     this.createCamera(renderer);
     this.axis = new THREE.AxisHelper(25);
@@ -38,8 +40,8 @@ class TheScene extends THREE.Scene {
    */
   createCamera(renderer) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(-300, 400, 0);
-    var look = new THREE.Vector3(-40, 0, 0);
+    this.camera.position.set(-300, 480, 0);
+    var look = new THREE.Vector3(-30, 0, 0);
     this.camera.lookAt(look);
 
     this.trackballControls = new THREE.TrackballControls(this.camera, renderer);
@@ -78,10 +80,14 @@ class TheScene extends THREE.Scene {
     var walls_texture = loader.load('../img/walls.jpg');
     var sky_texture = loader.load('../img/mw.jpg');
 
-    this.gameField = new GameField(400, 300, new THREE.MeshPhongMaterial({ map: floor_texture }), 20, 40, new THREE.MeshPhongMaterial({ map: walls_texture }));
+    this.gameField = new GameField(400, 400, new THREE.MeshPhongMaterial({ map: floor_texture }), 20, 40, new THREE.MeshPhongMaterial({ map: walls_texture }));
     this.sky = new Sky({ background: new THREE.MeshBasicMaterial({ map: sky_texture }) });
+
+    this.platform = new Platform({});
+
     model.add(this.gameField);
     model.add(this.sky);
+    model.add(this.platform);
 
     return model;
   }
