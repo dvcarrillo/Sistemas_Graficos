@@ -4,8 +4,8 @@
  * @author David Vargas, Andrés Molina
  * 
  * @param width - The width of the platform
- * @param depth - The depth of the platform
  * @param height - The height of the platform
+ * @param depth - The depth of the platform
  * @param material - The material of the platform
  * 
  * @param fieldWidth - The width of the Game Field
@@ -16,11 +16,11 @@ class Platform extends THREE.Object3D {
     constructor(parameters) {
         super();
 
-        // Material of the platform
         this.width = (parameters.width === undefined ? 70 : parameters.width);
-        this.depth = (parameters.depth === undefined ? 20 : parameters.depth);
         this.height = (parameters.height === undefined ? 20 : parameters.height);
+        this.depth = (parameters.depth === undefined ? 20 : parameters.depth);
         this.material = (parameters.material === undefined ? new THREE.MeshBasicMaterial({ color: 0xf2f2f2 }) : parameters.material);
+        
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
         this.add(this.createPlatform());

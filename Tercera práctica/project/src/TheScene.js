@@ -25,6 +25,7 @@ class TheScene extends THREE.Scene {
     this.trackballControls = null;
 
     this.platform = null;
+    this.brick = null;     // Crear aqui un vector
 
     this.createLights();
     this.createCamera(renderer);
@@ -84,10 +85,12 @@ class TheScene extends THREE.Scene {
     this.sky = new Sky({ background: new THREE.MeshBasicMaterial({ map: sky_texture }) });
 
     this.platform = new Platform({});
+    this.brick = new Brick({});
 
     model.add(this.gameField);
     model.add(this.sky);
     model.add(this.platform);
+    model.add(this.brick.createBrickOn(0,0,0));
 
     return model;
   }
