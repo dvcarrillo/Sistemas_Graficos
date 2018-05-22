@@ -100,16 +100,16 @@ function onMouseWheel(event) {
 function onKeyDown(event) {
   switch (event.keyCode) {
     case 32:  //spacebar
-      if(!scene.robot.isDead) 
+      if(scene.alive) 
         requestID? stop() : start();
       break;
     case 37:  //left arrow
-      if (requestID && !scene.robot.isDead)
-        scene.moveRobot(TheScene.TURN_LEFT);
+      if (requestID && scene.alive)
+        scene.movePlatform(TheScene.MOVE_LEFT);
       break;
     case 39:  //right arrow
-      if (requestID && !scene.robot.isDead)
-        scene.moveRobot(TheScene.TURN_RIGHT);
+      if (requestID && scene.alive)
+        scene.movePlatform(TheScene.MOVE_RIGHT);
       break;
     case 86:  //key v
       if (requestID && !scene.robot.isDead) {

@@ -39,4 +39,24 @@ class Platform extends THREE.Object3D {
 
         return cube;
     }
+
+    moveRight(fieldWidth, displacement) {
+        if(this.position.x + displacement <= fieldWidth/2 - this.width/2) {
+            this.applyMatrix(new THREE.Matrix4().makeTranslation(displacement, 0, 0));
+        } else {
+            const extra = (this.position.x + displacement) - (fieldWidth/2 - this.width/2)
+            this.applyMatrix(new THREE.Matrix4().makeTranslation(displacement - extra, 0, 0));
+        }
+        // console.log(`PLATFORM POSITION X (RIGHT): ${this.position.x}`);
+    }
+
+    moveLeft(fieldWidth, displacement) {
+        if(this.position.x - displacement >= - fieldWidth/2 + this.width/2) {
+            this.applyMatrix(new THREE.Matrix4().makeTranslation(-displacement, 0, 0));
+        } else {
+            const extra = (this.position.x - displacement) - (- fieldWidth/2 + this.width/2)
+            this.applyMatrix(new THREE.Matrix4().makeTranslation(- displacement - extra, 0, 0));
+        }
+        // console.log(`PLATFORM POSITION X (LEFT): ${this.position.x}`);
+    }
 }

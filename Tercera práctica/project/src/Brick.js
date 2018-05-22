@@ -28,7 +28,6 @@ class Brick extends THREE.Object3D {
         // Color selection
         let randomNum = Math.floor(Math.random() * brickColors.length); 
         let brickColor = brickColors[randomNum];
-        console.log("ER COLO: " + brickColor);
 
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
@@ -57,7 +56,7 @@ class Brick extends THREE.Object3D {
     createBrickOn(position_x, position_z) {
         var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         var cube = new THREE.Mesh(geometry, this.material);
-        console.log(`TRANSLACION: x: ${position_x}, z: ${position_z}`)
+        // console.log(`TRANSLACION: x: ${position_x}, z: ${position_z}`);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height/2 + 0.1, position_z));
 
         cube.receiveShadow = true;

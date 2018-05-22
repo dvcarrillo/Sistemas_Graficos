@@ -25,6 +25,7 @@ class TheScene extends THREE.Scene {
     this.trackballControls = null;
     this.gameFieldWidth = 400;
     this.gameFieldDepth = 400;
+    this.alive = true;
 
     this.platform = null;
     this.bricks = [];     // Crear aqui un vector
@@ -145,8 +146,10 @@ class TheScene extends THREE.Scene {
   movePlatform(action) {
     switch (action) {
       case TheScene.MOVE_RIGHT:
+        this.platform.moveRight(this.gameFieldWidth, 8);
         break;
       case TheScene.MOVE_LEFT:
+        this.platform.moveLeft(this.gameFieldWidth, 8);
         break;
     }
   }
@@ -165,5 +168,5 @@ TheScene.NORMAL_CAMERA = 0;
 TheScene.EYE_CAMERA = 1;
 
 // Actions
-TheScene.MOVE_RIGHT = 1;
-TheScene.MOVE_LEFT = 2;
+TheScene.MOVE_RIGHT = 0;
+TheScene.MOVE_LEFT = 1;
