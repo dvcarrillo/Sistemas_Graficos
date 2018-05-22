@@ -36,16 +36,16 @@ class GameField extends THREE.Object3D {
     var wall = null;
     switch (position) {
       case 0: // right wall
-        wall = new THREE.Mesh(new THREE.BoxGeometry(fWidth, height, width, 1, 1, 1), material);
-        wall.applyMatrix(new THREE.Matrix4().makeTranslation(0, height / 2, fDeep / 2 + width / 2));
+        wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep, 1, 1, 1), material);
+        wall.applyMatrix(new THREE.Matrix4().makeTranslation(fWidth / 2 + width / 2, height / 2, 0));
         break;
       case 1: // left wall
-        wall = new THREE.Mesh(new THREE.BoxGeometry(fWidth, height, width, 1, 1, 1), material);
-        wall.applyMatrix(new THREE.Matrix4().makeTranslation(0, height / 2, - fDeep / 2 - width / 2));
+        wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep, 1, 1, 1), material);
+        wall.applyMatrix(new THREE.Matrix4().makeTranslation(- fWidth / 2 - width / 2, height / 2, 0));
         break;
       case 2: // top wall
-        wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep + 2 * width, 1, 1, 1), material);
-        wall.applyMatrix(new THREE.Matrix4().makeTranslation(fWidth / 2 + width / 2, height / 2, 0));
+        wall = new THREE.Mesh(new THREE.BoxGeometry(fDeep + 2*width, height, width, 1, 1, 1), material);
+        wall.applyMatrix(new THREE.Matrix4().makeTranslation(0, height / 2, -fDeep / 2 - width / 2));
         break;
     }
 
