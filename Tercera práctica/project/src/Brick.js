@@ -33,7 +33,7 @@ class Brick extends THREE.Object3D {
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
         this.width = (parameters.width === undefined ? this.fieldWidth / 10 : parameters.width);
-        this.height = (parameters.height === undefined ? 20 : parameters.height);
+        this.height = (parameters.height === undefined ? 35 : parameters.height);
         this.depth = (parameters.depth === undefined ? 20 : parameters.depth);
         this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({color: brickColor}) : parameters.material);
         this.type = (parameters.type === undefined ? 0 : parameters.type);
@@ -54,17 +54,21 @@ class Brick extends THREE.Object3D {
     /**
      * Create the brick on the desired position
      */
-    createBrickOn(position_x, position_y, position_z) {
+    createBrickOn(position_x, position_z) {
         var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         var cube = new THREE.Mesh(geometry, this.material);
-
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, position_y, position_z));
+        console.log(`TRANSLACION: x: ${position_x}, z: ${position_z}`)
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height/2, position_z));
 
         cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
         this.add(cube);
         return cube;
+    }
+
+    toString() {
+        console.log(`LADRILLO: x: ${this.position.x}, y: ${this.position.y}, z: ${this.position.z}, width: ${this.width}, height: ${this.height}`);
     }
 
 }

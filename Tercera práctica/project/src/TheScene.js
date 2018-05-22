@@ -16,16 +16,18 @@ class TheScene extends THREE.Scene {
     super();
 
     // Current difficulty
-    this.difficulty = 1;
+    this.difficulty = 10;
 
     // Attributes
     this.ambientLight = null;
     this.spotLight = null;
     this.camera = null;
     this.trackballControls = null;
+    this.gameFieldWidth = 400;
+    this.gameFieldDepth = 400;
 
     this.platform = null;
-    this.brick = null;     // Crear aqui un vector
+    this.bricks = [];     // Crear aqui un vector
 
     this.createLights();
     this.createCamera(renderer);
@@ -81,16 +83,27 @@ class TheScene extends THREE.Scene {
     var walls_texture = loader.load('../img/walls.jpg');
     var sky_texture = loader.load('../img/mw.jpg');
 
-    this.gameField = new GameField(400, 400, new THREE.MeshPhongMaterial({ map: floor_texture }), 20, 40, new THREE.MeshPhongMaterial({ map: walls_texture }));
+    this.gameField = new GameField(this.gameFieldWidth, this.gameFieldDepth, new THREE.MeshPhongMaterial({ map: floor_texture }), 20, 40, new THREE.MeshPhongMaterial({ map: walls_texture }));
     this.sky = new Sky({ background: new THREE.MeshBasicMaterial({ map: sky_texture }) });
 
     this.platform = new Platform({});
-    this.brick = new Brick({});
+
+    const numBricksRow = 10;
+    const brickDepth = 20;
+    const brickWidth = this.gameFieldWidth/numBricksRow;
+    for(let row=0; row < this.difficulty; row++) {
+      for (let col=0; col < numBricksRow; col++) {
+        const brick = new Brick({width: brickWidth, depth: brickDepth});
+        brick.createBrickOn(-this.gameFieldWidth/2 + brickWidth/2 + brickWidth * col, -this.gameFieldDepth/2 + brickDepth/2 + brickDepth*row);
+        model.add(brick);
+        this.bricks.push(brick);
+      } 
+    }
+
 
     model.add(this.gameField);
     model.add(this.sky);
     model.add(this.platform);
-    model.add(this.brick.createBrickOn(0,0,0));
 
     return model;
   }
