@@ -99,6 +99,10 @@ function onMouseWheel(event) {
 // It processes when the keys are pressed down
 function onKeyDown(event) {
   switch (event.keyCode) {
+    case 13: //enter
+      if(requestID && scene.alive && scene.ballPaused)
+        scene.throwBall();
+      break;
     case 32:  //spacebar
       if(scene.alive) 
         requestID? stop() : start();

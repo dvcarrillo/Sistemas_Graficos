@@ -168,6 +168,10 @@ class TheScene extends THREE.Scene {
   setDifficulty(level) {
     level = Math.floor(level);
   }
+
+  throwBall() {
+    this.ballPaused = false;
+  }
 }
 
 
