@@ -41,8 +41,8 @@ class TheScene extends THREE.Scene {
    */
   createCamera(renderer) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(-300, 480, 0);
-    var look = new THREE.Vector3(-30, 0, 0);
+    this.camera.position.set(0, 480, 300);
+    var look = new THREE.Vector3(0, 0, 0);
     this.camera.lookAt(look);
 
     this.trackballControls = new THREE.TrackballControls(this.camera, renderer);
@@ -100,7 +100,7 @@ class TheScene extends THREE.Scene {
    * @controls - The GUI information
    */
   animate(controls) {
-    this.axis.visible = controls.axis;
+    this.axis.visible = true;
     this.setDifficulty(controls.difficulty);
   }
 
