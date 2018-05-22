@@ -26,9 +26,11 @@ class TheScene extends THREE.Scene {
     this.gameFieldWidth = 400;
     this.gameFieldDepth = 400;
     this.alive = true;
+    this.ballPaused = true;
 
     this.platform = null;
-    this.bricks = [];     // Crear aqui un vector
+    this.bricks = [];
+    this.ball = null;
 
     this.createLights();
     this.createCamera(renderer);
@@ -101,10 +103,12 @@ class TheScene extends THREE.Scene {
       } 
     }
 
+    this.ball = new Ball({});
 
     model.add(this.gameField);
     model.add(this.sky);
     model.add(this.platform);
+    model.add(this.ball);
 
     return model;
   }
@@ -147,9 +151,15 @@ class TheScene extends THREE.Scene {
     switch (action) {
       case TheScene.MOVE_RIGHT:
         this.platform.moveRight(this.gameFieldWidth, 8);
+        if (this.ballPaused) {
+          this.ball.moveWithPlatform(this.platform.position.x);
+        }
         break;
       case TheScene.MOVE_LEFT:
         this.platform.moveLeft(this.gameFieldWidth, 8);
+        if (this.ballPaused) {
+          this.ball.moveWithPlatform(this.platform.position.x);
+        }
         break;
     }
   }

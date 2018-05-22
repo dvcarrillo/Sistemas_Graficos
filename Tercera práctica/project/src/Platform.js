@@ -32,7 +32,7 @@ class Platform extends THREE.Object3D {
         var material = new THREE.MeshBasicMaterial(this.material);
         var cube = new THREE.Mesh(geometry, material);
         
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) - (this.height * 1.5 / 2)));
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) - (this.depth * 1.5 / 2)));
 
         cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
