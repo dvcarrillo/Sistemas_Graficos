@@ -58,7 +58,7 @@ class Brick extends THREE.Object3D {
         var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         var cube = new THREE.Mesh(geometry, this.material);
         console.log(`TRANSLACION: x: ${position_x}, z: ${position_z}`)
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height/2, position_z));
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height/2 + 0.1, position_z));
 
         cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
