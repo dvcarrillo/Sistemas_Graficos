@@ -42,7 +42,7 @@ class TheScene extends THREE.Scene {
   createCamera(renderer) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera.position.set(0, 480, 300);
-    var look = new THREE.Vector3(0, 0, 0);
+    var look = new THREE.Vector3(0, 0, 30);
     this.camera.lookAt(look);
 
     this.trackballControls = new THREE.TrackballControls(this.camera, renderer);

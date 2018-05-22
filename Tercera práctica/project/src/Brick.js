@@ -18,7 +18,7 @@
  */
 
 // Green, blue, fuchsia, red, yellow, gray
-const brickColors = [0x00cc00, 0x0066ff, 0xff00ff, 0xff0000, 0xffff00, 0x808080];
+const brickColors = [0x00cc00, 0x0066ff, 0xff00ff, 0xff0000, 0xffff00, 0x808080, 0xff6600, 0x99ff33, 0x33cccc, 0x660066, 0xffffff];
 
 class Brick extends THREE.Object3D {
 
@@ -55,7 +55,7 @@ class Brick extends THREE.Object3D {
      * Create the brick on the desired position
      */
     createBrickOn(position_x, position_y, position_z) {
-        var geometry = new THREE.BoxGeometry(this.depth, this.height, this.width);
+        var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         var cube = new THREE.Mesh(geometry, this.material);
 
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, position_y, position_z));

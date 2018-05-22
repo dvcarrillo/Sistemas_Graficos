@@ -28,11 +28,11 @@ class Platform extends THREE.Object3D {
 
     // Creates the platform
     createPlatform() {
-        var geometry = new THREE.BoxGeometry(this.depth, this.height, this.width);
+        var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         var material = new THREE.MeshBasicMaterial(this.material);
         var cube = new THREE.Mesh(geometry, material);
         
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation((-this.fieldWidth / 2) + (this.height * 1.5 / 2), (this.height * 1.5) / 2, 0));
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) + (this.height * 1.5 / 2)));
 
         cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
