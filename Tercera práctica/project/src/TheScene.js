@@ -62,7 +62,7 @@ class TheScene extends THREE.Scene {
 
     // add spotlight for the shadows
     this.spotLight = new THREE.SpotLight(0xffffff, 0.7);
-    this.spotLight.position.set(-300, 400, 0);
+    this.spotLight.position.set(0, 400, 300);
     this.spotLight.castShadow = true;
     // the shadow resolution
     this.spotLight.shadow.mapSize.width = 2048;
