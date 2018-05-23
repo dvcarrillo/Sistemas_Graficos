@@ -15,6 +15,11 @@ class TheScene extends THREE.Scene {
   constructor(renderer) {
     super();
 
+    // Movement constants
+    this.PLATFORM_SPEED = 4
+    this.MOVE_RIGHT = false;
+    this.MOVE_LEFT = false;
+
     // Current difficulty
     this.difficulty = 10;
 
@@ -120,6 +125,8 @@ class TheScene extends THREE.Scene {
   animate(controls) {
     this.axis.visible = true;
     this.setDifficulty(controls.difficulty);
+
+    this.movePlatform();
   }
 
   /// It returns the camera
@@ -147,20 +154,18 @@ class TheScene extends THREE.Scene {
     this.camera.updateProjectionMatrix();
   }
 
-  movePlatform(action) {
-    switch (action) {
-      case TheScene.MOVE_RIGHT:
-        this.platform.moveRight(this.gameFieldWidth, 8);
-        if (this.ballPaused) {
-          this.ball.moveWithPlatform(this.platform.position.x);
-        }
-        break;
-      case TheScene.MOVE_LEFT:
-        this.platform.moveLeft(this.gameFieldWidth, 8);
-        if (this.ballPaused) {
-          this.ball.moveWithPlatform(this.platform.position.x);
-        }
-        break;
+  movePlatform() {
+    if(this.MOVE_RIGHT && !this.MOVE_LEFT) {
+      this.platform.moveRight(this.gameFieldWidth, this.PLATFORM_SPEED);
+      if (this.ballPaused) {
+        this.ball.moveWithPlatform(this.platform.position.x);
+      }
+    }
+    else if (!this.MOVE_RIGHT && this.MOVE_LEFT) {
+      this.platform.moveLeft(this.gameFieldWidth, this.PLATFORM_SPEED);
+      if (this.ballPaused) {
+        this.ball.moveWithPlatform(this.platform.position.x);
+      }
     }
   }
   
@@ -172,15 +177,33 @@ class TheScene extends THREE.Scene {
   throwBall() {
     this.ballPaused = false;
   }
-}
 
+  setKeyDown(key) {
+    switch (key) {
+      case "left":
+        this.LEFT_KEY_DOWN = true;
+        break;
+      case "right":
+        this.RIGHT_KEY_DOWN = true;
+        break;
+    }
+  }
+
+  setKeyUp(key) {
+    switch (key) {
+      case "left":
+        this.LEFT_KEY_DOWN = false;
+        break;
+      case "right":
+        this.RIGHT_KEY_DOWN = false;
+        break;
+    }
+  }
+
+}
 
 // class variables
 
 // Application modes
 TheScene.NORMAL_CAMERA = 0;
 TheScene.EYE_CAMERA = 1;
-
-// Actions
-TheScene.MOVE_RIGHT = 0;
-TheScene.MOVE_LEFT = 1;

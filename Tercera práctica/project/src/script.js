@@ -95,7 +95,6 @@ function onMouseWheel(event) {
   }
 }
 
-
 // It processes when the keys are pressed down
 function onKeyDown(event) {
   switch (event.keyCode) {
@@ -109,11 +108,11 @@ function onKeyDown(event) {
       break;
     case 37:  //left arrow
       if (requestID && scene.alive)
-        scene.movePlatform(TheScene.MOVE_LEFT);
+        scene.MOVE_LEFT = true;
       break;
     case 39:  //right arrow
       if (requestID && scene.alive)
-        scene.movePlatform(TheScene.MOVE_RIGHT);
+        scene.MOVE_RIGHT = true;
       break;
     case 86:  //key v
       if (requestID && !scene.robot.isDead) {
@@ -125,6 +124,20 @@ function onKeyDown(event) {
           applicationMode = TheScene.NORMAL_CAMERA;
         }
       }
+      break;
+  }
+}
+
+// It processes when the keys are pressed down
+function onKeyUp(event) {
+  switch (event.keyCode) {
+    case 37:  //left arrow
+      if (requestID && scene.alive)
+        scene.MOVE_LEFT = false;
+      break;
+    case 39:  //right arrow
+      if (requestID && scene.alive)
+        scene.MOVE_RIGHT = false;
       break;
   }
 }
@@ -191,6 +204,7 @@ $(function () {
   window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
   window.addEventListener("resize", onWindowResize);
   window.addEventListener("keydown", onKeyDown, false);
+  window.addEventListener("keyup", onKeyUp, false);
 
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   scene = new TheScene(renderer.domElement);
