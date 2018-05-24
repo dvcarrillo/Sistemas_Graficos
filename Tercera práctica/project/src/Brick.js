@@ -37,6 +37,8 @@ class Brick extends THREE.Object3D {
         this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({color: brickColor}) : parameters.material);
         this.type = (parameters.type === undefined ? 0 : parameters.type);
 
+        this.collider = null;
+        this.colliderView = null;
         // Points determination according to brick type
         // More types to be added
         switch (this.type) {
@@ -62,12 +64,20 @@ class Brick extends THREE.Object3D {
         cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
+        this.collider = new THREE.Box3().setFromObject(cube);
+        this.colliderView = new THREE.Box3Helper(this.collider, 0xffff00);
+        this.add(this.colliderView);
+
         this.add(cube);
         return cube;
     }
 
     toString() {
         console.log(`LADRILLO: x: ${this.position.x}, y: ${this.position.y}, z: ${this.position.z}, width: ${this.width}, height: ${this.height}`);
+    }
+
+    getCollider() {
+        return this.collider;
     }
 
 }

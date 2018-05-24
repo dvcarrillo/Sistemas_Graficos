@@ -16,7 +16,14 @@ class GameField extends THREE.Object3D {
 
   constructor(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial) {
     super();
+    this.rightCollider = null;
+    this.rightColliderView = null;
+    this.leftCollider = null;
+    this.leftColliderView = null;
+    this.topCollider = null;
+    this.topColliderView = null;
     this.add(this.createGameField(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial));
+
   }
 
   createGameField(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial) {
@@ -38,14 +45,20 @@ class GameField extends THREE.Object3D {
       case 0: // right wall
         wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep, 1, 1, 1), material);
         wall.applyMatrix(new THREE.Matrix4().makeTranslation(fWidth / 2 + width / 2, height / 2, 0));
+        this.rightCollider = new THREE.Box3().setFromObject(wall);
+        this.rightColliderView = new THREE.Box3Helper(this.rightCollider, 0xff00ff);
         break;
       case 1: // left wall
         wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep, 1, 1, 1), material);
         wall.applyMatrix(new THREE.Matrix4().makeTranslation(- fWidth / 2 - width / 2, height / 2, 0));
+        this.leftCollider = new THREE.Box3().setFromObject(wall);
+        this.leftColliderView = new THREE.Box3Helper(this.leftCollider, 0xff00ff);
         break;
       case 2: // top wall
         wall = new THREE.Mesh(new THREE.BoxGeometry(fDeep + 2*width, height, width, 1, 1, 1), material);
         wall.applyMatrix(new THREE.Matrix4().makeTranslation(0, height / 2, -fDeep / 2 - width / 2));
+        this.topCollider = new THREE.Box3().setFromObject(wall);
+        this.topColliderView = new THREE.Box3Helper(this.topCollider, 0xff00ff);
         break;
     }
 
@@ -55,4 +68,20 @@ class GameField extends THREE.Object3D {
     return wall;
   }
 
+  getCollider(position) {
+    let collider;
+    switch(position) {
+      case 0: // right wall
+        collider = this.rightCollider;
+        break;
+      case 1: // left wall
+        collider = this.leftCollider;
+        break;
+      case 2: // top wall
+        collider = this.topCollider;
+        break;
+    }
+
+    return collider;
+  }
 }

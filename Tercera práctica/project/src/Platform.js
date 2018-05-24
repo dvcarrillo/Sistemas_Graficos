@@ -23,7 +23,11 @@ class Platform extends THREE.Object3D {
         
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
-        this.add(this.createPlatform());
+        this.platform = this.createPlatform();
+        this.collider = null;
+        this.colliderView = null;
+
+        this.add(this.platform);
     }
 
     // Creates the platform
@@ -33,11 +37,19 @@ class Platform extends THREE.Object3D {
         var cube = new THREE.Mesh(geometry, material);
         
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) - (this.depth * 1.5 / 2)));
-
+        
         cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
         return cube;
+    }
+    
+    getCollider() {
+        this.remove(this.colliderView);
+        this.collider = new THREE.Box3().setFromObject(this.platform);
+        this.colliderView = new THREE.Box3Helper(this.collider, 0xff0000);
+        this.add(this.colliderView);
+        return this.collider;
     }
 
     moveRight(fieldWidth, displacement) {

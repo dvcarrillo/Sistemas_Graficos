@@ -16,7 +16,8 @@ class TheScene extends THREE.Scene {
     super();
 
     // Movement constants
-    this.PLATFORM_SPEED = 4
+    this.PLATFORM_SPEED = 4;
+    this.BALL_SPEED = 2;
     this.MOVE_RIGHT = false;
     this.MOVE_LEFT = false;
 
@@ -32,7 +33,8 @@ class TheScene extends THREE.Scene {
     this.gameFieldDepth = 400;
     this.alive = true;
     this.ballPaused = true;
-
+    this.gameField = null;
+    
     this.platform = null;
     this.bricks = [];
     this.ball = null;
@@ -101,6 +103,7 @@ class TheScene extends THREE.Scene {
     const brickWidth = this.gameFieldWidth/numBricksRow;
     for(let row=0; row < this.difficulty; row++) {
       for (let col=0; col < numBricksRow; col++) {
+        // Create the brick
         const brick = new Brick({width: brickWidth, depth: brickDepth});
         brick.createBrickOn(-this.gameFieldWidth/2 + brickWidth/2 + brickWidth * col, -this.gameFieldDepth/2 + brickDepth/2 + brickDepth*row);
         model.add(brick);
@@ -126,7 +129,51 @@ class TheScene extends THREE.Scene {
     this.axis.visible = true;
     this.setDifficulty(controls.difficulty);
 
-    this.movePlatform();
+    if (this.alive) {
+      this.movePlatform();
+      const platformCollider = this.platform.getCollider();
+      
+      if(!this.ballPaused){
+        this.ball.moveBall(this.BALL_SPEED);
+        const ballCollider = this.ball.getCollider();
+        
+        if (ballCollider.intersectsBox(this.platform.getCollider())) {
+          console.log("Bola en plataforma");
+          this.ball.calculateDirection();
+        } else if (ballCollider.intersectsBox(this.gameField.getCollider(0))) {
+          console.log("Bola choca pared derecha");
+          this.ball.calculateDirection();
+        } else if (ballCollider.intersectsBox(this.gameField.getCollider(1))) {
+          console.log("Bola choca pared izquierda");
+          this.ball.calculateDirection();
+        } else if (ballCollider.intersectsBox(this.gameField.getCollider(2))) {
+          console.log("Bola choca pared superior");
+          this.ball.calculateDirection();
+        } else {
+          let brickCollision = false;
+          let cont = this.bricks.length - 1;
+          while (cont >= 0 && !brickCollision) {
+            if(this.bricks[cont] !== undefined){
+              if (ballCollider.intersectsBox(this.bricks[cont].getCollider())) {
+                console.log(`COLISIONO CON ${cont}`);
+                brickCollision = true;
+              } else {
+                cont--;
+              } 
+            } else {
+              cont--;
+            }
+          }
+          
+          if (brickCollision) {
+            this.ball.calculateDirection();
+            this.model.remove(this.bricks[cont]);
+            this.bricks[cont] = undefined;
+          }
+        }
+      }
+    }
+
   }
 
   /// It returns the camera
