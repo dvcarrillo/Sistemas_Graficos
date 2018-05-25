@@ -17,12 +17,12 @@ class TheScene extends THREE.Scene {
 
     // Movement constants
     this.PLATFORM_SPEED = 4;
-    this.BALL_SPEED = 2;
+    this.BALL_SPEED = 3;
     this.MOVE_RIGHT = false;
     this.MOVE_LEFT = false;
 
     // Current difficulty
-    this.difficulty = 1;
+    this.difficulty = 10;
 
     // Attributes
     this.ambientLight = null;
@@ -146,11 +146,11 @@ class TheScene extends THREE.Scene {
             console.log(`Platform: (${this.platform.position.x}, ${this.platform.position.z}) Ball: (${this.ball.position.x}, ${this.ball.position.z})`);
             if (this.ball.position.x > this.platform.position.x) { // The ball hits on the right side of the platform
               const distance = this.ball.position.x - this.platform.position.x;
-              const newDirection = 270 + distance / 35 * 45; // 270 is the minimum angle, 35 is the maximum distance, 45 is the maximum difference between the minumun angle and the maximum angle allow
+              const newDirection = 270 + distance / 35 * 60; // 270 is the minimum angle, 35 is the maximum distance, 60 is the maximum difference between the minumun angle and the maximum angle allow
               this.ball.setDirection(Math.round(newDirection));
             } else if (this.ball.position.x < this.platform.position.x) { // The ball hits on the left side of the platform
               const distance = this.platform.position.x - this.ball.position.x;
-              const newDirection = 270 - distance / 35 * 45;
+              const newDirection = 270 - distance / 35 * 60;
               this.ball.setDirection(Math.round(newDirection));
             } else { // The ball hits on the middle of the platform
               this.ball.setDirection(Math.round(270));
@@ -170,7 +170,6 @@ class TheScene extends THREE.Scene {
             while (cont >= 0 && !brickCollision) {
               if (this.bricks[cont] !== undefined) {
                 if (ballCollider.intersectsBox(this.bricks[cont].getCollider())) {
-                  console.log(`COLISIONO CON ${cont}`);
                   brickCollision = true;
                 } else {
                   cont--;
@@ -181,7 +180,23 @@ class TheScene extends THREE.Scene {
             }
 
             if (brickCollision) {
-              this.ball.calculateDirection();
+              console.log(`BRICK: x: (${this.bricks[cont].collider.min.x}, ${this.bricks[cont].collider.max.x}), z: (${this.bricks[cont].collider.min.z}, ${this.bricks[cont].collider.max.z}) BALL: x: (${this.ball.collider.min.x}, ${this.ball.collider.max.x}), z: (${this.ball.collider.min.z}, ${this.ball.collider.max.z})`)
+              console.log(`BALL position z: ${this.ball.collider.getCenter().z}`);
+              if (this.ball.collider.getCenter().z < this.bricks[cont].collider.max.z && this.ball.collider.getCenter().z > this.bricks[cont].collider.min.z) {
+                console.log("ENTRA EN CHOQUE LATERAL");
+                if (this.ball.position.x < this.bricks[cont].position.x && 
+                  this.ball.collider.max.x > this.bricks[cont].collider.min.x) { // The ball is at the left side of the brick and hit with it
+                  console.log("ENTRA EN CHOQUE IZQUIERDO");
+                  this.ball.calculateDirection(true);
+                } else if (this.ball.position.x > this.bricks[cont].position.x &&
+                   this.ball.collider.min.x < this.bricks[cont].collider.max.x) { // The ball is at the right side of the brick and hit with it
+                  console.log("ENTRA EN CHOQUE DERECHO");
+                  this.ball.calculateDirection(true);
+                }
+              } else {
+                console.log("ENTRA EN ELSE");
+                this.ball.calculateDirection();
+              }
               this.model.remove(this.bricks[cont]);
               this.bricks[cont] = undefined;
 
