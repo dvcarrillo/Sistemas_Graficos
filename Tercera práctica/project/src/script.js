@@ -170,9 +170,14 @@ function render() {
 
   renderer.render(scene, camera);
 
-  if(true)
+  if(this.scene.alive && !this.scene.victory)
     start();
   else{
+    if (this.scene.victory){
+      window.alert("VICTORY!");
+    } else {
+      window.alert("DEFEAT!");
+    }
     stop();
   }
 }

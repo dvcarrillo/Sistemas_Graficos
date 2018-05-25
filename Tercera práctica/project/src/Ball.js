@@ -70,7 +70,14 @@ class Ball extends THREE.Object3D {
 
     }
 
-    calculateDirection() {
-        this.direction = degToRad(360) - this.direction;
+    calculateDirection(sideWall) {
+        this.direction = degToRad(360) - this.direction
+        if (sideWall) {
+            this.direction += degToRad(180);
+        }
+    }
+
+    setDirection(value) {
+        this.direction = degToRad(value);
     }
 }

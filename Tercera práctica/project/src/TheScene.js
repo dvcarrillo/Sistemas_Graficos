@@ -22,7 +22,7 @@ class TheScene extends THREE.Scene {
     this.MOVE_LEFT = false;
 
     // Current difficulty
-    this.difficulty = 10;
+    this.difficulty = 1;
 
     // Attributes
     this.ambientLight = null;
@@ -32,9 +32,10 @@ class TheScene extends THREE.Scene {
     this.gameFieldWidth = 400;
     this.gameFieldDepth = 400;
     this.alive = true;
+    this.victory = false;
     this.ballPaused = true;
     this.gameField = null;
-    
+
     this.platform = null;
     this.bricks = [];
     this.ball = null;
@@ -100,15 +101,15 @@ class TheScene extends THREE.Scene {
 
     const numBricksRow = 10;
     const brickDepth = 20;
-    const brickWidth = this.gameFieldWidth/numBricksRow;
-    for(let row=0; row < this.difficulty; row++) {
-      for (let col=0; col < numBricksRow; col++) {
+    const brickWidth = this.gameFieldWidth / numBricksRow;
+    for (let row = 0; row < this.difficulty; row++) {
+      for (let col = 0; col < numBricksRow; col++) {
         // Create the brick
-        const brick = new Brick({width: brickWidth, depth: brickDepth});
-        brick.createBrickOn(-this.gameFieldWidth/2 + brickWidth/2 + brickWidth * col, -this.gameFieldDepth/2 + brickDepth/2 + brickDepth*row);
+        const brick = new Brick({ width: brickWidth, depth: brickDepth });
+        brick.createBrickOn(-this.gameFieldWidth / 2 + brickWidth / 2 + brickWidth * col, -this.gameFieldDepth / 2 + brickDepth / 2 + brickDepth * row);
         model.add(brick);
         this.bricks.push(brick);
-      } 
+      }
     }
 
     this.ball = new Ball({});
@@ -132,48 +133,75 @@ class TheScene extends THREE.Scene {
     if (this.alive) {
       this.movePlatform();
       const platformCollider = this.platform.getCollider();
-      
-      if(!this.ballPaused){
+
+      if (!this.ballPaused) {
         this.ball.moveBall(this.BALL_SPEED);
-        const ballCollider = this.ball.getCollider();
-        
-        if (ballCollider.intersectsBox(this.platform.getCollider())) {
-          console.log("Bola en plataforma");
-          this.ball.calculateDirection();
-        } else if (ballCollider.intersectsBox(this.gameField.getCollider(0))) {
-          console.log("Bola choca pared derecha");
-          this.ball.calculateDirection();
-        } else if (ballCollider.intersectsBox(this.gameField.getCollider(1))) {
-          console.log("Bola choca pared izquierda");
-          this.ball.calculateDirection();
-        } else if (ballCollider.intersectsBox(this.gameField.getCollider(2))) {
-          console.log("Bola choca pared superior");
-          this.ball.calculateDirection();
+
+        if (this.ball.position.z > this.platform.position.z + this.platform.depth / 2) {
+          this.alive = false;
         } else {
-          let brickCollision = false;
-          let cont = this.bricks.length - 1;
-          while (cont >= 0 && !brickCollision) {
-            if(this.bricks[cont] !== undefined){
-              if (ballCollider.intersectsBox(this.bricks[cont].getCollider())) {
-                console.log(`COLISIONO CON ${cont}`);
-                brickCollision = true;
+          const ballCollider = this.ball.getCollider();
+
+          if (ballCollider.intersectsBox(this.platform.getCollider())) {
+            console.log(`Platform: (${this.platform.position.x}, ${this.platform.position.z}) Ball: (${this.ball.position.x}, ${this.ball.position.z})`);
+            if (this.ball.position.x > this.platform.position.x) { // The ball hits on the right side of the platform
+              const distance = this.ball.position.x - this.platform.position.x;
+              const newDirection = 270 + distance / 35 * 45; // 270 is the minimum angle, 35 is the maximum distance, 45 is the maximum difference between the minumun angle and the maximum angle allow
+              this.ball.setDirection(Math.round(newDirection));
+            } else if (this.ball.position.x < this.platform.position.x) { // The ball hits on the left side of the platform
+              const distance = this.platform.position.x - this.ball.position.x;
+              const newDirection = 270 - distance / 35 * 45;
+              this.ball.setDirection(Math.round(newDirection));
+            } else { // The ball hits on the middle of the platform
+              this.ball.setDirection(Math.round(270));
+            }
+          } else if (ballCollider.intersectsBox(this.gameField.getCollider(0))) {
+            console.log("Bola choca pared derecha");
+            this.ball.calculateDirection(true);
+          } else if (ballCollider.intersectsBox(this.gameField.getCollider(1))) {
+            console.log("Bola choca pared izquierda");
+            this.ball.calculateDirection(true);
+          } else if (ballCollider.intersectsBox(this.gameField.getCollider(2))) {
+            console.log("Bola choca pared superior");
+            this.ball.calculateDirection();
+          } else {
+            let brickCollision = false;
+            let cont = this.bricks.length - 1;
+            while (cont >= 0 && !brickCollision) {
+              if (this.bricks[cont] !== undefined) {
+                if (ballCollider.intersectsBox(this.bricks[cont].getCollider())) {
+                  console.log(`COLISIONO CON ${cont}`);
+                  brickCollision = true;
+                } else {
+                  cont--;
+                }
               } else {
                 cont--;
-              } 
-            } else {
-              cont--;
+              }
             }
-          }
-          
-          if (brickCollision) {
-            this.ball.calculateDirection();
-            this.model.remove(this.bricks[cont]);
-            this.bricks[cont] = undefined;
+
+            if (brickCollision) {
+              this.ball.calculateDirection();
+              this.model.remove(this.bricks[cont]);
+              this.bricks[cont] = undefined;
+
+              cont = 0;
+              let empty = true;
+              while (cont < this.bricks.length && empty) {
+                if (this.bricks[cont] !== undefined) {
+                  empty = false;
+                } else {
+                  cont++;
+                }
+              }
+              if (empty) {
+                this.victory = true;
+              }
+            }
           }
         }
       }
     }
-
   }
 
   /// It returns the camera
@@ -202,7 +230,7 @@ class TheScene extends THREE.Scene {
   }
 
   movePlatform() {
-    if(this.MOVE_RIGHT && !this.MOVE_LEFT) {
+    if (this.MOVE_RIGHT && !this.MOVE_LEFT) {
       this.platform.moveRight(this.gameFieldWidth, this.PLATFORM_SPEED);
       if (this.ballPaused) {
         this.ball.moveWithPlatform(this.platform.position.x);
@@ -215,7 +243,7 @@ class TheScene extends THREE.Scene {
       }
     }
   }
-  
+
   // Sets the game difficulty
   setDifficulty(level) {
     level = Math.floor(level);
