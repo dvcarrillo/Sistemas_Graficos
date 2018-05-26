@@ -140,7 +140,7 @@ class TheScene extends THREE.Scene {
       if (!this.ballPaused) {
         this.ball.moveBall(this.BALL_SPEED);
 
-        if (this.ball.position.z > this.platform.position.z + this.platform.depth / 2) {
+        if (this.ball.position.z > 4 * (this.platform.position.z + this.platform.depth / 2)) {
           this.alive = false;
         } else {
           const ballCollider = this.ball.getCollider();
