@@ -174,9 +174,19 @@ function render() {
     start();
   else {
     if (this.scene.victory) {
-      window.alert("VICTORY!");
+      $("#screen-title").html("VICTORY");
+      $("#screen-subtitle").html("You obtained " + scene.playerPoints + " points<br><br>Reload the page to play again");
+      $("#game-container").css("display", "none");
+      $("button").css("display", "none");
+      $("select").css("display", "none");
+      $("#game-title-screen").css("display", "block");
     } else {
-      window.alert("DEFEAT!");
+      $("#screen-title").html("DEFEAT");
+      $("#screen-subtitle").html("You obtained " + scene.playerPoints + " points<br><br>Reload the page to play again");
+      $("#game-container").css("display", "none");
+      $("button").css("display", "none");
+      $("select").css("display", "none");
+      $("#game-title-screen").css("display", "block");
     }
     stop();
   }
@@ -219,6 +229,7 @@ $(function () {
     requestID = undefined;
     createGUI(true);
     // Hide start screen elements
+    $("#info-text").css("display", "none");
     $("#game-title-screen").css("display", "none");
     start();
   });

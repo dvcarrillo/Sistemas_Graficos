@@ -24,6 +24,9 @@ class TheScene extends THREE.Scene {
     // Current difficulty
     this.difficulty = difficulty;
 
+    // Current player points
+    this.playerPoints = 0;
+
     // Attributes
     this.ambientLight = null;
     this.spotLight = null;
@@ -171,6 +174,7 @@ class TheScene extends THREE.Scene {
               if (this.bricks[cont] !== undefined) {
                 if (ballCollider.intersectsBox(this.bricks[cont].getCollider())) {
                   brickCollision = true;
+                  this.playerPoints += this.bricks[cont].points;
                 } else {
                   cont--;
                 }
