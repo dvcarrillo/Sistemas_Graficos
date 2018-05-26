@@ -1,0 +1,40 @@
+.ui-overlay {
+    position: fixed;
+    height: 350px;
+    width: 450px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50px;
+    background-color: lightgrey;
+    border: 2px solid grey;
+    font-family: 'Russo One', sans-serif;
+    padding: 20px;
+    text-align: center;
+    vertical-align: middle;
+    
+}
+
+.ui-overlay .input-selection {
+    margin-top: 50px;
+}
+
+.input-selection label {
+    margin-right: 10px;
+}
+
+.ui-overlay button {
+    display: block;
+    margin-top: 50px;
+    width: 200px;
+    height: 100px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid gray;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 30px;
+    font-family: 'Russo One', sans-serif;
+}
+
+

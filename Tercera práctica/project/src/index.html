@@ -5,8 +5,9 @@
         <title>Arkanoid 3D</title>
         <meta charset="utf-8">
         <!-- Styles -->
-        <!-- <link rel="stylesheet" href="../style/main.css"> -->
-        
+        <link rel="stylesheet" href="../style/main.css">
+        <link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
+
         <!-- Scripts -->
         <script type="text/javascript" src="../libs/three.js"></script>
         <script type="text/javascript" src="../libs/jquery-1.9.0.js"></script>
@@ -29,16 +30,41 @@
     </head>
         <body>
 
-        <!-- Div which will show statistical information -->
-        <div id="Stats-output">
+        <div id="overlay-container" class="ui-overlay">
+            <h1 id="overlay-title">ARKANOID 3D</h1>
+            <p id="overlay-text">Select level</p>
+
+            <form>
+                <div class="input-selection">
+                    <input type="radio" id="button-1" name="selectlevel" value="level1">
+                    <label for="button-1">Level 1</label>
+
+                    <input type="radio" id="button-2" name="selectlevel" value="level2">
+                    <label for="button-2">Level 2</label>
+
+                    <input type="radio" id="button-3" name="selectlevel" value="level3">
+                    <label for="button-3">Level 3</label>
+
+                    <input type="radio" id="button-4" name="selectlevel" value="level4">
+                    <label for="button-4">Level 4</label>
+
+                    <button id="button-play">PLAY</button>
+                </div>
+            </form>
         </div>
 
-        <!-- Div which will show several messages -->
-        <div style="position:absolute; left:100px; top:10px" id="Messages">
-        </div>
+        <div id="game-container" class="game">
+            <!-- Div which will show statistical information -->
+            <div id="Stats-output">
+            </div>
 
-        <!-- Div which will hold the Output -->
-        <div id="WebGL-output">
+            <!-- Div which will show several messages -->
+            <div style="position:absolute; left:100px; top:10px" id="Messages">
+            </div>
+
+            <!-- Div which will hold the Output -->
+            <div id="WebGL-output">
+            </div>
         </div>
     </body>
 </html>
