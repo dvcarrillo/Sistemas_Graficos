@@ -219,7 +219,7 @@ $(function () {
     requestID = undefined;
     createGUI(true);
     // Hide start screen elements
-    $("#game-title").css("display", "none");
+    $("#game-title-screen").css("display", "none");
     start();
   });
 });
