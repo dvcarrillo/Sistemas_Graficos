@@ -38,7 +38,7 @@ class Brick extends THREE.Object3D {
         this.type = (parameters.type === undefined ? 0 : parameters.type);
 
         this.collider = null;
-        this.colliderView = null;
+        // this.colliderView = null;
         // Points determination according to brick type
         // More types to be added
         switch (this.type) {
@@ -65,8 +65,8 @@ class Brick extends THREE.Object3D {
         cube.autoUpdateMatrix = false;
 
         this.collider = new THREE.Box3().setFromObject(cube);
-        this.colliderView = new THREE.Box3Helper(this.collider, 0xffff00);
-        this.add(this.colliderView);
+        // this.colliderView = new THREE.Box3Helper(this.collider, 0xffff00);
+        // this.add(this.colliderView);
 
         this.add(cube);
         return cube;

@@ -25,7 +25,7 @@ class Ball extends THREE.Object3D {
 
         this.ball = this.createBall();
         this.collider = null;
-        this.colliderView = null;
+        // this.colliderView = null;
 
         this.add(this.ball);
     }
@@ -47,10 +47,10 @@ class Ball extends THREE.Object3D {
     }
 
     getCollider() {
-        this.remove(this.colliderView);
+        // this.remove(this.colliderView);
         this.collider = new THREE.Box3().setFromObject(this);
-        this.colliderView = new THREE.Box3Helper(this.collider, 0x00ff00);
-        this.add(this.colliderView);
+        // this.colliderView = new THREE.Box3Helper(this.collider, 0x00ff00);
+        // this.add(this.colliderView);
         return this.collider;
     }
 

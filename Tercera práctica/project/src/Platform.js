@@ -25,7 +25,7 @@ class Platform extends THREE.Object3D {
 
         this.platform = this.createPlatform();
         this.collider = null;
-        this.colliderView = null;
+        // this.colliderView = null;
 
         this.add(this.platform);
     }
@@ -45,10 +45,10 @@ class Platform extends THREE.Object3D {
     }
     
     getCollider() {
-        this.remove(this.colliderView);
+        // this.remove(this.colliderView);
         this.collider = new THREE.Box3().setFromObject(this.platform);
-        this.colliderView = new THREE.Box3Helper(this.collider, 0xff0000);
-        this.add(this.colliderView);
+        // this.colliderView = new THREE.Box3Helper(this.collider, 0xff0000);
+        // this.add(this.colliderView);
         return this.collider;
     }
 

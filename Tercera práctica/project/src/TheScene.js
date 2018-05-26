@@ -12,17 +12,17 @@
 
 class TheScene extends THREE.Scene {
 
-  constructor(renderer) {
+  constructor(renderer, difficulty) {
     super();
 
     // Movement constants
-    this.PLATFORM_SPEED = 4;
-    this.BALL_SPEED = 3;
+    this.PLATFORM_SPEED = 4 + difficulty / 6;
+    this.BALL_SPEED = 4 + difficulty / 6;
     this.MOVE_RIGHT = false;
     this.MOVE_LEFT = false;
 
     // Current difficulty
-    this.difficulty = 10;
+    this.difficulty = difficulty;
 
     // Attributes
     this.ambientLight = null;

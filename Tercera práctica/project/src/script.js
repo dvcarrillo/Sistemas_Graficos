@@ -99,12 +99,12 @@ function onMouseWheel(event) {
 function onKeyDown(event) {
   switch (event.keyCode) {
     case 13: //enter
-      if(requestID && scene.alive && scene.ballPaused)
+      if (requestID && scene.alive && scene.ballPaused)
         scene.throwBall();
       break;
     case 32:  //spacebar
-      if(scene.alive) 
-        requestID? stop() : start();
+      if (scene.alive)
+        requestID ? stop() : start();
       break;
     case 37:  //left arrow
       if (requestID && scene.alive)
@@ -170,10 +170,10 @@ function render() {
 
   renderer.render(scene, camera);
 
-  if(this.scene.alive && !this.scene.victory)
+  if (this.scene.alive && !this.scene.victory)
     start();
-  else{
-    if (this.scene.victory){
+  else {
+    if (this.scene.victory) {
       window.alert("VICTORY!");
     } else {
       window.alert("DEFEAT!");
@@ -184,7 +184,7 @@ function render() {
 
 // It starts the render
 function start() {
-  if (!requestID){
+  if (!requestID) {
     requestID = requestAnimationFrame(render);
   }
 }
@@ -199,24 +199,27 @@ function stop() {
 
 // The main function
 $(function () {
-  // create a render and set the size
-  renderer = createRenderer();
-  // add the output of the renderer to the html element
-  $("#WebGL-output").append(renderer.domElement);
-  // liseners
-  window.addEventListener("mousedown", onMouseDown, true);
-  window.addEventListener("mousewheel", onMouseWheel, true);      // For Chrome an others
-  window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
-  window.addEventListener("resize", onWindowResize);
-  window.addEventListener("keydown", onKeyDown, false);
-  window.addEventListener("keyup", onKeyUp, false);
-
-  // create a scene, that will hold all our elements such as objects, cameras and lights.
-  scene = new TheScene(renderer.domElement);
-  camera = scene.getCamera();
-  requestID = undefined;
-
-  createGUI(true);
-
-  start();
+  $("#button-play").click(function () {
+    // create a render and set the size
+    renderer = createRenderer();
+    // add the output of the renderer to the html element
+    $("#WebGL-output").append(renderer.domElement);
+    // listeners
+    window.addEventListener("mousedown", onMouseDown, true);
+    window.addEventListener("mousewheel", onMouseWheel, true);      // For Chrome an others
+    window.addEventListener("DOMMouseScroll", onMouseWheel, true);  // For Firefox
+    window.addEventListener("resize", onWindowResize);
+    window.addEventListener("keydown", onKeyDown, false);
+    window.addEventListener("keyup", onKeyUp, false);
+    // Fetch selected difficulty
+    let difficulty = $("#lvl-selection").val();
+    // create a scene, that will hold all our elements such as objects, cameras and lights.
+    scene = new TheScene(renderer.domElement, difficulty);
+    camera = scene.getCamera();
+    requestID = undefined;
+    createGUI(true);
+    // Hide start screen elements
+    $("#game-title").css("display", "none");
+    start();
+  });
 });
