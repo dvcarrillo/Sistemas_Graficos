@@ -23,7 +23,6 @@ class GameField extends THREE.Object3D {
     this.topCollider = null;
     // this.topColliderView = null;
     this.add(this.createGameField(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial));
-
   }
 
   createGameField(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial) {

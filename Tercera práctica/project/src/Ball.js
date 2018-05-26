@@ -17,11 +17,11 @@ class Ball extends THREE.Object3D {
 
         // Parameters
         this.radius = (parameters.radius === undefined ? 5 : parameters.background);
-        this.background = (parameters.background === undefined ? new THREE.MeshBasicMaterial({ color: 0xff0000 }) : parameters.background);
+        this.background = (parameters.background === undefined ? new THREE.MeshBasicMaterial({ color: 0xff3333 }) : parameters.background);
 
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
-        this.direction = degToRad(Math.floor((Math.random() * 300) + 240));
+        this.direction = degToRad((Math.random() * 75) + 240);
 
         this.ball = this.createBall();
         this.collider = null;
@@ -38,7 +38,8 @@ class Ball extends THREE.Object3D {
         //10 = platform.height * 1.5 - platform.height
         //30 = platform.depth * 1.5
 
-        sphere.receiveShadow = true;
+        sphere.castShadow = true;
+        // sphere.receiveShadow = true;
         sphere.autoUpdateMatrix = false;
 
         // console.log(`BALL x: ${sphere.position.x} y: ${sphere.position.y} z: ${sphere.position.z} radius: ${this.radius}`)

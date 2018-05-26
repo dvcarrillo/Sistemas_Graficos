@@ -77,7 +77,7 @@ class TheScene extends THREE.Scene {
     this.add(this.ambientLight);
 
     // add spotlight for the shadows
-    this.spotLight = new THREE.SpotLight(0xffffff, 0.7);
+    this.spotLight = new THREE.SpotLight(0xffffff, 0.9);
     this.spotLight.position.set(0, 400, 300);
     this.spotLight.castShadow = true;
     // the shadow resolution
@@ -93,7 +93,7 @@ class TheScene extends THREE.Scene {
   createModel() {
     var model = new THREE.Object3D()
     var loader = new THREE.TextureLoader();
-    var floor_texture = loader.load('../img/floor.jpg');
+    var floor_texture = loader.load('../img/floor.png');
     var walls_texture = loader.load('../img/walls.jpg');
     var sky_texture = loader.load('../img/mw.jpg');
 

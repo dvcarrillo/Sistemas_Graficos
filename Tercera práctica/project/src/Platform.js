@@ -18,7 +18,7 @@ class Platform extends THREE.Object3D {
 
         this.width = (parameters.width === undefined ? 70 : parameters.width);
         this.height = (parameters.height === undefined ? 20 : parameters.height);
-        this.depth = (parameters.depth === undefined ? 20 : parameters.depth);
+        this.depth = (parameters.depth === undefined ? 10 : parameters.depth);
         this.material = (parameters.material === undefined ? new THREE.MeshBasicMaterial({ color: 0xf2f2f2 }) : parameters.material);
         
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
@@ -36,9 +36,10 @@ class Platform extends THREE.Object3D {
         var material = new THREE.MeshBasicMaterial(this.material);
         var cube = new THREE.Mesh(geometry, material);
         
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) - (this.depth * 1.5 / 2)));
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) - (this.depth * 4 / 2)));
         
-        cube.receiveShadow = true;
+        cube.castShadow = true;
+        // cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
         return cube;

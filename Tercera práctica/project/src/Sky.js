@@ -26,7 +26,7 @@ class Sky extends THREE.Object3D {
         sphere.scale.x = -1;
         sphere.scale.y = -1;
         sphere.scale.z = -1;
-        sphere.rotation.y = Math.PI / 2;
+        sphere.rotation.y = Math.PI / 3.5;
         sphere.rotation.x = Math.PI;
 
         return sphere;

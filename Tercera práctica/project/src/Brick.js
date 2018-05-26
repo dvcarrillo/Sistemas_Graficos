@@ -61,7 +61,8 @@ class Brick extends THREE.Object3D {
         // console.log(`TRANSLACION: x: ${position_x}, z: ${position_z}`);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height/2 + 1, position_z));
 
-        cube.receiveShadow = true;
+        cube.castShadow = true;
+        // cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
         this.collider = new THREE.Box3().setFromObject(cube);
