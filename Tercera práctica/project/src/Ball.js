@@ -21,7 +21,7 @@ class Ball extends THREE.Object3D {
 
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
-        this.direction = degToRad(270);
+        this.direction = degToRad(Math.floor((Math.random() * 300) + 240));
 
         this.ball = this.createBall();
         this.collider = null;
