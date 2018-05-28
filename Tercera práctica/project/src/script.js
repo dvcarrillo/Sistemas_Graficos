@@ -57,7 +57,7 @@ function initStats() {
  * @param str - The message
  */
 function setMessage(str) {
-  document.getElementById("Messages").innerHTML = "<h2 class='points-display'>" + str + "</h2>";
+  document.getElementById("Messages").innerHTML =  str;
 }
 
 // It processes the clic-down of the mouse
@@ -88,10 +88,12 @@ function onKeyDown(event) {
         requestID ? stop() : start();
       break;
     case 37:  //left arrow
+    case 65:
       if (requestID && scene.alive)
         scene.MOVE_LEFT = true;
       break;
     case 39:  //right arrow
+    case 68:
       if (requestID && scene.alive)
         scene.MOVE_RIGHT = true;
       break;
@@ -102,10 +104,12 @@ function onKeyDown(event) {
 function onKeyUp(event) {
   switch (event.keyCode) {
     case 37:  //left arrow
+    case 65:
       if (requestID && scene.alive)
         scene.MOVE_LEFT = false;
       break;
     case 39:  //right arrow
+    case 68:
       if (requestID && scene.alive)
         scene.MOVE_RIGHT = false;
       break;
@@ -140,9 +144,26 @@ function render() {
 
   renderer.render(scene, camera);
 
-  if (this.scene.alive && !this.scene.victory)
-    start();
-  else {
+  if (this.scene.alive && !this.scene.victory){
+    if (this.scene.endTime !== null){
+      const now = Date.now();
+      if (now < this.scene.endTime){
+        console.log((this.scene.endTime - now)/1000 + " seconds left");
+        this.setMessage(Math.floor((this.scene.endTime - now)/1000) + " seconds left");
+        start();
+      } else {
+        $("#screen-title").html("DEFEAT");
+        $("#screen-subtitle").html("YOU RUN OUT OF TIME! You obtained " + scene.playerPoints + " points<br><br>Reload the page to play again");
+        $("#game-container").css("display", "none");
+        $("button").css("display", "none");
+        $("select").css("display", "none");
+        $("#game-title-screen").css("display", "block");
+        stop();
+      }
+    } else {
+      start();
+    }
+  } else {
     if (this.scene.victory) {
       $("#screen-title").html("VICTORY");
       $("#screen-subtitle").html("You obtained " + scene.playerPoints + " points<br><br>Reload the page to play again");

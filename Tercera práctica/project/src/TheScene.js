@@ -24,7 +24,13 @@ class TheScene extends THREE.Scene {
     this.MOVE_LEFT = false;
 
     // Current difficulty
+    this.endTime = null;
     this.difficulty = difficulty;
+    console.log(this.difficulty);
+    if (this.difficulty === "6") {
+      this.endTime = Date.now() + 120000;
+      console.log(this.endTime);
+    }
 
     // Current player points
     this.playerPoints = 0;
@@ -47,6 +53,10 @@ class TheScene extends THREE.Scene {
     this.specialObjects = [];
     this.specialObjectTexture = null;
     this.ball = null;
+
+    this.rightWallHit = 0;
+    this.leftWallHit = 0;
+    this.topWallHit = 0;
 
     this.createLights();
     this.createCamera(renderer);
@@ -185,6 +195,10 @@ class TheScene extends THREE.Scene {
         } else {
           const ballCollider = this.ball.getCollider();
           if (ballCollider.intersectsBox(this.platform.getCollider())) {
+            this.rightWallHit = 0;
+            this.leftWallHit = 0;
+            this.topWallHit = 0;
+
             if (this.ball.position.x > this.platform.position.x) { // The ball hits on the right side of the platform
               const distance = this.ball.position.x - this.platform.position.x;
               const newDirection = 270 + distance / 35 * 60; // 270 is the minimum angle, 35 is the maximum distance, 60 is the maximum difference between the minumun angle and the maximum angle allow
@@ -199,18 +213,35 @@ class TheScene extends THREE.Scene {
             if (this.HAS_OBJECT && this.currentUses > 0) {
               this.ballPaused = true;
               this.currentUses--;
-              console.log
 
               if (this.currentUses < 1)
                 this.HAS_OBJECT = false;
             }
           } else if (ballCollider.intersectsBox(this.gameField.getCollider(0))) {
+            this.leftWallHit = 0;
+            this.topWallHit = 0;
+            if (this.rightWallHit > 0)
+              this.ball.position.x = 195; // Consider the field width and the ball radius
             this.ball.calculateDirection(true);
+            this.rightWallHit++;
           } else if (ballCollider.intersectsBox(this.gameField.getCollider(1))) {
+            this.rightWallHit = 0;
+            this.topWallHit = 0;
+            if (this.leftWallHit > 0)
+              this.ball.position.x = -195; // Consider the field width and the ball radius
             this.ball.calculateDirection(true);
+            this.leftWallHit++;
           } else if (ballCollider.intersectsBox(this.gameField.getCollider(2))) {
+            this.rightWallHit = 0;
+            this.leftWallHit = 0;
+            if (this.topWallHit > 0)
+              this.ball.position.z = -195; // Consider the field width and the ball radius
             this.ball.calculateDirection();
+            this.topWallHit++;
           } else {
+            this.rightWallHit = 0;
+            this.leftWallHit = 0;
+            this.topWallHit = 0;
             let brickCollision = false;
             let cont = this.bricks.length - 1;
             while (cont >= 0 && !brickCollision) {
