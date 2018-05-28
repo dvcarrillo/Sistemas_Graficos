@@ -57,7 +57,10 @@ function initStats() {
  * @param str - The message
  */
 function setMessage(str) {
-  document.getElementById("Messages").innerHTML =  str;
+  let contElement = document.getElementById("messages-box");
+  let msgElement = document.getElementById("messages");
+  msgElement.innerHTML = str;
+  contElement.style.display = "block";
 }
 
 // It processes the clic-down of the mouse
@@ -148,7 +151,7 @@ function render() {
     if (this.scene.endTime !== null){
       const now = Date.now();
       if (now < this.scene.endTime){
-        this.setMessage(Math.floor((this.scene.endTime - now)/1000) + " seconds left");
+        this.setMessage(Math.floor((this.scene.endTime - now)/1000) + " sec. left");
         start();
       } else {
         $("#screen-title").html("DEFEAT");

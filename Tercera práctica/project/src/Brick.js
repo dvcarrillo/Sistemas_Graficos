@@ -39,7 +39,7 @@ class Brick extends THREE.Object3D {
         
         // Type calculation
         let randNum = Math.round(Math.random() * 100);
-        this.type = (randNum < 90 - (parameters.difficulty === undefined ? 0 : parameters.difficulty / 2)) ? 0 : 1;
+        this.type = (randNum < 90 )? 0 : 1;
 
         this.collider = null;
         // Points determination according to brick type
