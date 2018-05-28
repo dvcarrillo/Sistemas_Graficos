@@ -22,32 +22,34 @@ class SpecialObject extends THREE.Object3D {
         this.width = (parameters.width === undefined ? this.fieldWidth / 10 : parameters.width);
         this.height = (parameters.height === undefined ? 10 : parameters.height);
         this.depth = (parameters.depth === undefined ? 10 : parameters.depth);
-        this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({ color: 0xffd700 }) : parameters.material);
-        this.speed = (parameters.speed === undefined ? 5 : parameters.speed);
+        this.material = (parameters.texture === undefined ? new THREE.MeshBasicMaterial({ color: 0xff3333 }) : parameters.texture);
+        this.speed = (parameters.speed === undefined ? 3 : parameters.speed);
 
         this.collider = null;
-        this.colliderView = null;
     }
 
-    createObject() {
-        var geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+    createObjectOn(position_x, position_z) {
+        var geometry = new THREE.BoxGeometry(15, 15, 15);
         var torus = new THREE.Mesh(geometry, this.material);
 
         torus.castShadow = true;
         torus.autoUpdateMatrix = false;
-
-        this.collider = new THREE.Box3().setFromObject(torus);
-        this.colliderView = new THREE.Box3Helper(this.collider, 0xffff00);
-       
-        torus.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -(this.height / 2) - 10));
-        torus.applyMatrix(new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2));
         
-        this.add(this.colliderView);
+        torus.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height / 2 + 1, position_z));
+        //torus.rotation.x = Math.PI / 2;
+        
+        this.collider = new THREE.Box3().setFromObject(torus);
+
         this.add(torus);
         return torus;
     }
 
     moveObject() {
-        this.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, speed));
+        this.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, this.speed));
+    }
+
+    getCollider() {
+        this.collider = new THREE.Box3().setFromObject(this);
+        return this.collider;
     }
 }

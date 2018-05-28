@@ -18,6 +18,8 @@ class TheScene extends THREE.Scene {
     // Movement constants
     this.PLATFORM_SPEED = 4 + difficulty / 6;
     this.BALL_SPEED = 4 + difficulty / 6;
+    this.HAS_OBJECT = false;
+    this.OBJECT_USES = 3;
     this.MOVE_RIGHT = false;
     this.MOVE_LEFT = false;
 
@@ -39,10 +41,11 @@ class TheScene extends THREE.Scene {
     this.ballPaused = true;
     this.gameField = null;
 
-    this.specialObject = null;
-
+    
     this.platform = null;
     this.bricks = [];
+    this.specialObjects = [];
+    this.specialObjectTexture = null;
     this.ball = null;
 
     this.createLights();
@@ -98,6 +101,7 @@ class TheScene extends THREE.Scene {
     var floor_texture = loader.load('../img/floor.png');
     var walls_texture = loader.load('../img/walls.jpg');
     var sky_texture = loader.load('../img/mw.jpg');
+    this.specialObjectTexture = loader.load('../img/arrow.png');
 
     this.gameField = new GameField(this.gameFieldWidth, this.gameFieldDepth, new THREE.MeshPhongMaterial({ map: floor_texture }), 20, 40, new THREE.MeshPhongMaterial({ map: walls_texture }));
     this.sky = new Sky({ background: new THREE.MeshBasicMaterial({ map: sky_texture }) });
@@ -110,7 +114,7 @@ class TheScene extends THREE.Scene {
     for (let row = 0; row < this.difficulty; row++) {
       for (let col = 0; col < numBricksRow; col++) {
         // Create the brick
-        const brick = new Brick({ width: brickWidth, depth: brickDepth });
+        const brick = new Brick({ width: brickWidth, depth: brickDepth, difficulty: this.difficulty });
         brick.createBrickOn(-this.gameFieldWidth / 2 + brickWidth / 2 + brickWidth * col, -this.gameFieldDepth / 2 + brickDepth / 2 + brickDepth * row);
         model.add(brick);
         this.bricks.push(brick);
@@ -119,15 +123,33 @@ class TheScene extends THREE.Scene {
 
     this.ball = new Ball({});
 
-    this.specialObject = new SpecialObject({});
-
     model.add(this.gameField);
     model.add(this.sky);
     model.add(this.platform);
     model.add(this.ball);
-    model.add(this.specialObject.createObject());
 
     return model;
+  }
+
+  /// Adds a new special object to the game
+  /**
+   * @posX - X position of the object
+   * @posZ - Z position of the object
+   */
+  addSpecialObject(posX, posZ) {
+    let sObject = new SpecialObject({texture: new THREE.MeshPhongMaterial({ map: this.specialObjectTexture })});
+    sObject.createObjectOn(posX, posZ);
+    this.model.add(sObject);
+    this.specialObjects.push(sObject);
+  }
+
+  /// Removes a special object from the game
+  /**
+   * @pos - position of the object in the array
+   */
+  removeSpecialObject(pos) {
+    this.model.remove(this.specialObjects[pos]);
+    this.specialObjects.splice(pos, 1);
   }
 
   /// It sets the robot position according to the GUI
@@ -140,6 +162,20 @@ class TheScene extends THREE.Scene {
     if (this.alive) {
       this.movePlatform();
       const platformCollider = this.platform.getCollider();
+
+      // Move all the special objects in the scene and check collisions
+      for (let i = 0; i < this.specialObjects.length; i++) {
+        this.specialObjects[i].moveObject();
+        let objectCollider = this.specialObjects[i].getCollider();
+
+        if (objectCollider.intersectsBox(this.platform.getCollider())) {
+          this.removeSpecialObject(i);
+          this.HAS_OBJECT = true;
+          this.currentUses = this.OBJECT_USES;
+        } else if (this.specialObjects[i].collider.getCenter().z > (this.platform.collider.getCenter().z + this.platform.depth)) {
+          this.removeSpecialObject(i);
+        }
+      }
 
       if (!this.ballPaused) {
         this.ball.moveBall(this.BALL_SPEED);
@@ -161,6 +197,14 @@ class TheScene extends THREE.Scene {
               this.ball.setDirection(Math.round(newDirection));
             } else { // The ball hits on the middle of the platform
               this.ball.setDirection(Math.round(270));
+            }
+            if (this.HAS_OBJECT && this.currentUses > 0) {
+              this.ballPaused = true;
+              this.currentUses--;
+              console.log
+
+              if (this.currentUses < 1)
+                this.HAS_OBJECT = false;
             }
           } else if (ballCollider.intersectsBox(this.gameField.getCollider(0))) {
             console.log("Bola choca pared derecha");
@@ -205,6 +249,9 @@ class TheScene extends THREE.Scene {
                 console.log("ENTRA EN ELSE");
                 this.ball.calculateDirection();
               }
+              if (this.bricks[cont].type == 1)
+                this.addSpecialObject(this.bricks[cont].collider.getCenter().x, this.bricks[cont].collider.getCenter().z);
+
               this.model.remove(this.bricks[cont]);
               this.bricks[cont] = undefined;
 
@@ -253,16 +300,27 @@ class TheScene extends THREE.Scene {
   }
 
   movePlatform() {
+    let distance;
+    let side;
+    if(this.ball.position.x <= this.platform.position.x) {
+      distance = this.platform.position.x - this.ball.position.x;
+      side = "-";
+    }
+    else {
+      distance = this.ball.position.x - this.platform.position.x;
+      side = "+";
+    }
+
     if (this.MOVE_RIGHT && !this.MOVE_LEFT) {
       this.platform.moveRight(this.gameFieldWidth, this.PLATFORM_SPEED);
       if (this.ballPaused) {
-        this.ball.moveWithPlatform(this.platform.position.x);
+        this.ball.moveWithPlatform(this.platform.position.x, distance, side);
       }
     }
     else if (!this.MOVE_RIGHT && this.MOVE_LEFT) {
       this.platform.moveLeft(this.gameFieldWidth, this.PLATFORM_SPEED);
       if (this.ballPaused) {
-        this.ball.moveWithPlatform(this.platform.position.x);
+        this.ball.moveWithPlatform(this.platform.position.x, distance, side);
       }
     }
   }
@@ -270,7 +328,6 @@ class TheScene extends THREE.Scene {
   throwBall() {
     this.ballPaused = false;
   }
-
 }
 
 // class variables
