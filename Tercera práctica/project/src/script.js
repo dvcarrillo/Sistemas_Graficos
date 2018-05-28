@@ -13,9 +13,6 @@ scene = null;
 camera = null;
 requestID = null;
 
-// The GUI information
-GUIcontrols = null;
-
 // The object for the statistics
 stats = null;
 
@@ -27,10 +24,6 @@ applicationMode = TheScene.NORMAL_CAMERA;
  * @param withStats - A boolean to show the statictics or not
  */
 function createGUI(withStats) {
-  GUIcontrols = new function () {
-    this.transform = true;
-  }
-
   var gui = new dat.GUI();
 
   // The method  listen()  allows the height attribute to be written, not only read

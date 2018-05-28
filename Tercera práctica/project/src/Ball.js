@@ -25,7 +25,6 @@ class Ball extends THREE.Object3D {
 
         this.ball = this.createBall();
         this.collider = null;
-        // this.colliderView = null;
 
         this.add(this.ball);
     }
@@ -39,16 +38,11 @@ class Ball extends THREE.Object3D {
         sphere.castShadow = true;
         sphere.autoUpdateMatrix = false;
 
-        // console.log(`BALL x: ${sphere.position.x} y: ${sphere.position.y} z: ${sphere.position.z} radius: ${this.radius}`)
-
         return sphere;
     }
 
     getCollider() {
-        // this.remove(this.colliderView);
         this.collider = new THREE.Box3().setFromObject(this);
-        // this.colliderView = new THREE.Box3Helper(this.collider, 0x00ff00);
-        // this.add(this.colliderView);
         return this.collider;
     }
 
@@ -65,10 +59,7 @@ class Ball extends THREE.Object3D {
         const position_x = ballSpeed * Math.cos(this.direction);
         const position_z = ballSpeed * Math.sin(this.direction);
 
-        // console.log(`X: ${position_x} Z: ${position_z}`);
-
         this.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, 0, position_z));
-
     }
 
     calculateDirection(sideWall) {
