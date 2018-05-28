@@ -14,7 +14,8 @@
 
 /**
  * -- CURRENT TYPES OF BRICK --
- * 0: normal brick. It breaks when the ball touches it and gives points to the player
+ * 0: normal brick. It breaks when the ball touches it and gives points to the player - 10 points
+ * 1: special brick. When breaking, it drops a special object that needs to be caught by the player - 30 points
  */
 
 // Green, blue, fuchsia, red, yellow, gray
@@ -44,6 +45,10 @@ class Brick extends THREE.Object3D {
         switch (this.type) {
             case 0:
                 this.points = 10;
+                break;
+
+            case 1:
+                this.points = 30;
                 break;
         
             default:

@@ -39,6 +39,8 @@ class TheScene extends THREE.Scene {
     this.ballPaused = true;
     this.gameField = null;
 
+    this.specialObject = null;
+
     this.platform = null;
     this.bricks = [];
     this.ball = null;
@@ -117,10 +119,13 @@ class TheScene extends THREE.Scene {
 
     this.ball = new Ball({});
 
+    this.specialObject = new SpecialObject({});
+
     model.add(this.gameField);
     model.add(this.sky);
     model.add(this.platform);
     model.add(this.ball);
+    model.add(this.specialObject.createObject());
 
     return model;
   }
