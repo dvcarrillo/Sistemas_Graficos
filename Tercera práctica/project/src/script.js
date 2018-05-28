@@ -155,7 +155,7 @@ function render() {
         start();
       } else {
         $("#screen-title").html("DEFEAT");
-        $("#screen-subtitle").html("YOU RUN OUT OF TIME! You obtained " + scene.playerPoints + " points<br><br>Reload the page to play again");
+        $("#screen-subtitle").html("You ran out of time and obtained " + scene.playerPoints + " points<br><br>Reload the page to play again");
         $("#game-container").css("display", "none");
         $("button").css("display", "none");
         $("select").css("display", "none");
