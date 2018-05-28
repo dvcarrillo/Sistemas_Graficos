@@ -26,10 +26,8 @@ class TheScene extends THREE.Scene {
     // Current difficulty
     this.endTime = null;
     this.difficulty = difficulty;
-    console.log(this.difficulty);
     if (this.difficulty === "6") {
       this.endTime = Date.now() + 120000;
-      console.log(this.endTime);
     }
 
     // Current player points
@@ -121,6 +119,7 @@ class TheScene extends THREE.Scene {
     const numBricksRow = 10;
     const brickDepth = 20;
     const brickWidth = this.gameFieldWidth / numBricksRow;
+    let cont = 0;
     for (let row = 0; row < this.difficulty; row++) {
       for (let col = 0; col < numBricksRow; col++) {
         // Create the brick
@@ -128,6 +127,13 @@ class TheScene extends THREE.Scene {
         brick.createBrickOn(-this.gameFieldWidth / 2 + brickWidth / 2 + brickWidth * col, -this.gameFieldDepth / 2 + brickDepth / 2 + brickDepth * row);
         model.add(brick);
         this.bricks.push(brick);
+        if (brick.type === 1){
+          let sObject = new SpecialObject({numBrick: cont, texture: new THREE.MeshPhongMaterial({ map: this.specialObjectTexture })});
+          sObject.createObjectOn(brick.collider.getCenter().x, brick.collider.getCenter().z);
+          model.add(sObject);
+          this.specialObjects.push(sObject);
+        }
+        cont++;
       }
     }
 
@@ -147,10 +153,9 @@ class TheScene extends THREE.Scene {
    * @posZ - Z position of the object
    */
   addSpecialObject(posX, posZ) {
-    let sObject = new SpecialObject({texture: new THREE.MeshPhongMaterial({ map: this.specialObjectTexture })});
-    sObject.createObjectOn(posX, posZ);
-    this.model.add(sObject);
-    this.specialObjects.push(sObject);
+    
+    
+    
   }
 
   /// Removes a special object from the game
@@ -175,15 +180,17 @@ class TheScene extends THREE.Scene {
 
       // Move all the special objects in the scene and check collisions
       for (let i = 0; i < this.specialObjects.length; i++) {
-        this.specialObjects[i].moveObject();
-        let objectCollider = this.specialObjects[i].getCollider();
-
-        if (objectCollider.intersectsBox(this.platform.getCollider())) {
-          this.removeSpecialObject(i);
-          this.HAS_OBJECT = true;
-          this.currentUses = this.OBJECT_USES;
-        } else if (this.specialObjects[i].collider.getCenter().z > (this.platform.collider.getCenter().z + this.platform.depth)) {
-          this.removeSpecialObject(i);
+        if (this.bricks[this.specialObjects[i].brickLinked] === undefined){
+          this.specialObjects[i].moveObject();
+          let objectCollider = this.specialObjects[i].getCollider();
+  
+          if (objectCollider.intersectsBox(this.platform.getCollider())) {
+            this.removeSpecialObject(i);
+            this.HAS_OBJECT = true;
+            this.currentUses = this.OBJECT_USES;
+          } else if (this.specialObjects[i].collider.getCenter().z > (this.platform.collider.getCenter().z + this.platform.depth)) {
+            this.removeSpecialObject(i);
+          }
         }
       }
 
@@ -221,21 +228,21 @@ class TheScene extends THREE.Scene {
             this.leftWallHit = 0;
             this.topWallHit = 0;
             if (this.rightWallHit > 0)
-              this.ball.position.x = 195; // Consider the field width and the ball radius
+              this.ball.position.x = this.gameFieldWidth/2 - this.ball.radius; // Consider the field width and the ball radius
             this.ball.calculateDirection(true);
             this.rightWallHit++;
           } else if (ballCollider.intersectsBox(this.gameField.getCollider(1))) {
             this.rightWallHit = 0;
             this.topWallHit = 0;
             if (this.leftWallHit > 0)
-              this.ball.position.x = -195; // Consider the field width and the ball radius
+              this.ball.position.x = -(this.gameFieldWidth/2 - this.ball.radius); // Consider the field width and the ball radius
             this.ball.calculateDirection(true);
             this.leftWallHit++;
           } else if (ballCollider.intersectsBox(this.gameField.getCollider(2))) {
             this.rightWallHit = 0;
             this.leftWallHit = 0;
             if (this.topWallHit > 0)
-              this.ball.position.z = -195; // Consider the field width and the ball radius
+              this.ball.position.z = -(this.gameFieldDepth/2 - this.ball.radius); // Consider the field width and the ball radius
             this.ball.calculateDirection();
             this.topWallHit++;
           } else {
@@ -271,8 +278,6 @@ class TheScene extends THREE.Scene {
               } else {
                 this.ball.calculateDirection();
               }
-              if (this.bricks[cont].type == 1)
-                this.addSpecialObject(this.bricks[cont].collider.getCenter().x, this.bricks[cont].collider.getCenter().z);
 
               this.model.remove(this.bricks[cont]);
               this.bricks[cont] = undefined;
