@@ -25,23 +25,24 @@ class SpecialObject extends THREE.Object3D {
         this.material = (parameters.texture === undefined ? new THREE.MeshPhongMaterial({ color: 0xff3333 }) : parameters.texture);
         this.speed = (parameters.speed === undefined ? 3 : parameters.speed);
 
+        this.brickLinked = parameters.numBrick;
+
         this.collider = null;
     }
 
     createObjectOn(position_x, position_z) {
         var geometry = new THREE.BoxGeometry(15, 15, 15);
-        var torus = new THREE.Mesh(geometry, this.material);
+        var box = new THREE.Mesh(geometry, this.material);
 
-        torus.castShadow = true;
-        torus.autoUpdateMatrix = false;
+        box.castShadow = true;
+        box.autoUpdateMatrix = false;
         
-        torus.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height / 2 + 1, position_z));
-        //torus.rotation.x = Math.PI / 2;
+        box.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height / 2 + 1, position_z));
         
-        this.collider = new THREE.Box3().setFromObject(torus);
+        this.collider = new THREE.Box3().setFromObject(box);
 
-        this.add(torus);
-        return torus;
+        this.add(box);
+        return box;
     }
 
     moveObject() {

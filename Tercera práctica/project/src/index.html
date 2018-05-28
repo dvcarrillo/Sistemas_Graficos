@@ -59,6 +59,7 @@
                 <option value="8">LVL 3</option>
                 <option value="10">LVL 4</option>
                 <option value="12">LVL 5</option>
+                <option value="6">TIME</option>
             </select>
         </div>
         <button id="button-play">PLAY</button>
@@ -67,7 +68,8 @@
 
     <div id="game-container" class="game">
         <!-- Div which will show several messages -->
-        <div style="position:absolute; left:100px; top:10px" id="Messages">
+        <div class="message-box" id="messages-box" style="display: none">
+            <p class="message" id="messages"></p>
         </div>
         <!-- Div which will hold the Output -->
         <div id="WebGL-output">
