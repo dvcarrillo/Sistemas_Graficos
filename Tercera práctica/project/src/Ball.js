@@ -46,9 +46,13 @@ class Ball extends THREE.Object3D {
         return this.collider;
     }
 
-    moveWithPlatform(position_x) {
+    moveWithPlatform(position_x, distance, side) {
         const displacement = position_x - this.position.x;
-        this.applyMatrix(new THREE.Matrix4().makeTranslation(displacement, 0, 0));
+        
+        if (side === "+")
+            this.applyMatrix(new THREE.Matrix4().makeTranslation(displacement + distance, 0, 0));
+        else
+            this.applyMatrix(new THREE.Matrix4().makeTranslation(displacement - distance, 0, 0));
     }
 
     moveBall(ballSpeed) {

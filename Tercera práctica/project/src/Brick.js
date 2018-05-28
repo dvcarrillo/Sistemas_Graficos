@@ -14,7 +14,8 @@
 
 /**
  * -- CURRENT TYPES OF BRICK --
- * 0: normal brick. It breaks when the ball touches it and gives points to the player
+ * 0: normal brick. It breaks when the ball touches it and gives points to the player - 10 points
+ * 1: special brick. When breaking, it drops a special object that needs to be caught by the player - 30 points
  */
 
 // Green, blue, fuchsia, red, yellow, gray
@@ -35,7 +36,10 @@ class Brick extends THREE.Object3D {
         this.height = (parameters.height === undefined ? 35 : parameters.height);
         this.depth = (parameters.depth === undefined ? 20 : parameters.depth);
         this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({color: brickColor}) : parameters.material);
-        this.type = (parameters.type === undefined ? 0 : parameters.type);
+        
+        // Type calculation
+        let randNum = Math.round(Math.random() * 100);
+        this.type = (randNum < 90 - (parameters.difficulty === undefined ? 0 : parameters.difficulty)) ? 0 : 1;
 
         this.collider = null;
         // Points determination according to brick type
@@ -43,6 +47,10 @@ class Brick extends THREE.Object3D {
         switch (this.type) {
             case 0:
                 this.points = 10;
+                break;
+
+            case 1:
+                this.points = 30;
                 break;
         
             default:
