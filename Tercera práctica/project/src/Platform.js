@@ -25,7 +25,6 @@ class Platform extends THREE.Object3D {
 
         this.platform = this.createPlatform();
         this.collider = null;
-        // this.colliderView = null;
 
         this.add(this.platform);
     }
@@ -39,17 +38,13 @@ class Platform extends THREE.Object3D {
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0, (this.height * 1.5) / 2, (this.fieldWidth / 2) - (this.depth * 4 / 2)));
         
         cube.castShadow = true;
-        // cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
         return cube;
     }
     
     getCollider() {
-        // this.remove(this.colliderView);
         this.collider = new THREE.Box3().setFromObject(this.platform);
-        // this.colliderView = new THREE.Box3Helper(this.collider, 0xff0000);
-        // this.add(this.colliderView);
         return this.collider;
     }
 
@@ -60,7 +55,6 @@ class Platform extends THREE.Object3D {
             const extra = (this.position.x + displacement) - (fieldWidth/2 - this.width/2)
             this.applyMatrix(new THREE.Matrix4().makeTranslation(displacement - extra, 0, 0));
         }
-        // console.log(`PLATFORM POSITION X (RIGHT): ${this.position.x}`);
     }
 
     moveLeft(fieldWidth, displacement) {
@@ -70,6 +64,5 @@ class Platform extends THREE.Object3D {
             const extra = (this.position.x - displacement) - (- fieldWidth/2 + this.width/2)
             this.applyMatrix(new THREE.Matrix4().makeTranslation(- displacement - extra, 0, 0));
         }
-        // console.log(`PLATFORM POSITION X (LEFT): ${this.position.x}`);
     }
 }

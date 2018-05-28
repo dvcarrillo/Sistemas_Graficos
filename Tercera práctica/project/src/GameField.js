@@ -17,11 +17,8 @@ class GameField extends THREE.Object3D {
   constructor(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial) {
     super();
     this.rightCollider = null;
-    // this.rightColliderView = null;
     this.leftCollider = null;
-    // this.leftColliderView = null;
     this.topCollider = null;
-    // this.topColliderView = null;
     this.add(this.createGameField(fWidth, fDeep, fMaterial, wWidth, wHeight, wMaterial));
   }
 
@@ -45,19 +42,19 @@ class GameField extends THREE.Object3D {
         wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep, 1, 1, 1), material);
         wall.applyMatrix(new THREE.Matrix4().makeTranslation(fWidth / 2 + width / 2, height / 2, 0));
         this.rightCollider = new THREE.Box3().setFromObject(wall);
-        // this.rightColliderView = new THREE.Box3Helper(this.rightCollider, 0xff00ff);
+        this.rightCollider.expandByScalar(3);
         break;
       case 1: // left wall
         wall = new THREE.Mesh(new THREE.BoxGeometry(width, height, fDeep, 1, 1, 1), material);
         wall.applyMatrix(new THREE.Matrix4().makeTranslation(- fWidth / 2 - width / 2, height / 2, 0));
         this.leftCollider = new THREE.Box3().setFromObject(wall);
-        // this.leftColliderView = new THREE.Box3Helper(this.leftCollider, 0xff00ff);
+        this.leftCollider.expandByScalar(3);
         break;
       case 2: // top wall
         wall = new THREE.Mesh(new THREE.BoxGeometry(fDeep + 2*width, height, width, 1, 1, 1), material);
         wall.applyMatrix(new THREE.Matrix4().makeTranslation(0, height / 2, -fDeep / 2 - width / 2));
         this.topCollider = new THREE.Box3().setFromObject(wall);
-        // this.topColliderView = new THREE.Box3Helper(this.topCollider, 0xff00ff);
+        this.topCollider.expandByScalar(3);
         break;
     }
 

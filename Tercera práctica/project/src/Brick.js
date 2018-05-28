@@ -38,7 +38,6 @@ class Brick extends THREE.Object3D {
         this.type = (parameters.type === undefined ? 0 : parameters.type);
 
         this.collider = null;
-        // this.colliderView = null;
         // Points determination according to brick type
         // More types to be added
         switch (this.type) {
@@ -58,23 +57,16 @@ class Brick extends THREE.Object3D {
     createBrickOn(position_x, position_z) {
         var geometry = new THREE.BoxGeometry(this.width, this.height, this.depth);
         var cube = new THREE.Mesh(geometry, this.material);
-        // console.log(`TRANSLACION: x: ${position_x}, z: ${position_z}`);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.height/2 + 1, position_z));
 
         cube.castShadow = true;
-        // cube.receiveShadow = true;
         cube.autoUpdateMatrix = false;
 
         this.collider = new THREE.Box3().setFromObject(cube);
-        // this.colliderView = new THREE.Box3Helper(this.collider, 0xffff00);
-        // this.add(this.colliderView);
+        this.collider.expandByScalar(2);
 
         this.add(cube);
         return cube;
-    }
-
-    toString() {
-        console.log(`LADRILLO: x: ${this.position.x}, y: ${this.position.y}, z: ${this.position.z}, width: ${this.width}, height: ${this.height}`);
     }
 
     getCollider() {

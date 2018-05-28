@@ -143,7 +143,6 @@ class TheScene extends THREE.Scene {
           this.alive = false;
         } else {
           const ballCollider = this.ball.getCollider();
-
           if (ballCollider.intersectsBox(this.platform.getCollider())) {
             console.log(`Platform: (${this.platform.position.x}, ${this.platform.position.z}) Ball: (${this.ball.position.x}, ${this.ball.position.z})`);
             if (this.ball.position.x > this.platform.position.x) { // The ball hits on the right side of the platform
@@ -183,9 +182,9 @@ class TheScene extends THREE.Scene {
             }
 
             if (brickCollision) {
-              console.log(`BRICK: x: (${this.bricks[cont].collider.min.x}, ${this.bricks[cont].collider.max.x}), z: (${this.bricks[cont].collider.min.z}, ${this.bricks[cont].collider.max.z}) BALL: x: (${this.ball.collider.min.x}, ${this.ball.collider.max.x}), z: (${this.ball.collider.min.z}, ${this.ball.collider.max.z})`)
+              console.log(`BRICK: x: (${this.bricks[cont].collider.min.x}, ${this.bricks[cont].collider.max.x}), z: (${this.bricks[cont].collider.getCenter().z - this.bricks[cont].depth/2}, ${this.bricks[cont].collider.getCenter().z + this.bricks[cont].depth/2}) BALL: x: (${this.ball.collider.min.x}, ${this.ball.collider.max.x}), z: (${this.ball.collider.min.z}, ${this.ball.collider.max.z})`)
               console.log(`BALL position z: ${this.ball.collider.getCenter().z}`);
-              if (this.ball.collider.getCenter().z < this.bricks[cont].collider.max.z && this.ball.collider.getCenter().z > this.bricks[cont].collider.min.z) {
+              if (this.ball.collider.getCenter().z < (this.bricks[cont].collider.getCenter().z + this.bricks[cont].depth/2)  && this.ball.collider.getCenter().z > (this.bricks[cont].collider.getCenter().z - this.bricks[cont].depth/2) ) {
                 console.log("ENTRA EN CHOQUE LATERAL");
                 if (this.ball.position.x < this.bricks[cont].position.x &&
                   this.ball.collider.max.x > this.bricks[cont].collider.min.x) { // The ball is at the left side of the brick and hit with it
@@ -267,8 +266,6 @@ class TheScene extends THREE.Scene {
   }
 
 }
-
-// class variables
 
 // Application modes
 TheScene.NORMAL_CAMERA = 0;
