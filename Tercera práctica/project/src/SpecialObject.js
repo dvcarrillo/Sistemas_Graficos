@@ -22,7 +22,7 @@ class SpecialObject extends THREE.Object3D {
         this.width = (parameters.width === undefined ? this.fieldWidth / 10 : parameters.width);
         this.height = (parameters.height === undefined ? 10 : parameters.height);
         this.depth = (parameters.depth === undefined ? 10 : parameters.depth);
-        this.material = (parameters.texture === undefined ? new THREE.MeshBasicMaterial({ color: 0xff3333 }) : parameters.texture);
+        this.material = (parameters.texture === undefined ? new THREE.MeshPhongMaterial({ color: 0xff3333 }) : parameters.texture);
         this.speed = (parameters.speed === undefined ? 3 : parameters.speed);
 
         this.collider = null;
