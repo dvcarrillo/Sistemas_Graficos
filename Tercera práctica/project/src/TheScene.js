@@ -27,7 +27,7 @@ class TheScene extends THREE.Scene {
     this.endTime = null;
     this.difficulty = difficulty;
     if (this.difficulty === "6") {
-      this.endTime = Date.now() + 120000;
+      this.endTime = Date.now() + 140000;
     }
 
     // Current player points
@@ -145,17 +145,6 @@ class TheScene extends THREE.Scene {
     model.add(this.ball);
 
     return model;
-  }
-
-  /// Adds a new special object to the game
-  /**
-   * @posX - X position of the object
-   * @posZ - Z position of the object
-   */
-  addSpecialObject(posX, posZ) {
-    
-    
-    
   }
 
   /// Removes a special object from the game
