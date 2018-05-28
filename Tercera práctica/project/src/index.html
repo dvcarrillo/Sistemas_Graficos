@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>..:: Arkanoid 3D ::..</title>
+    <meta charset="utf-8">
+    <!-- Styles -->
+    <link rel="stylesheet" href="../style/main.css">
+    <!-- Scripts -->
+    <script type="text/javascript" src="../libs/three.js"></script>
+    <script type="text/javascript" src="../libs/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="../libs/stats.js"></script>
+    <script type="text/javascript" src="../libs/dat.gui.js"></script>
+    <script type="text/javascript" src="../libs/TrackballControls.js"></script>
+    <script type="text/javascript" src="GameField.js"></script>
+    <script type="text/javascript" src="TheScene.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="Sky.js"></script>
+    <script type="text/javascript" src="Platform.js"></script>
+    <script type="text/javascript" src="Brick.js"></script>
+    <script type="text/javascript" src="Ball.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-title-screen" class="title-container">
+        <h1 id="screen-title">ARKANOID 3D</h1>
+        <p id="screen-subtitle">
+            By David Vargas & Andres Molina in May 2018<br><br>
+            Please select a level and press play
+        </p>
+        <p id="info-text" style="display: none;">
+            ---
+            <br>
+            <br> Arkanoid 3D is a Three.js project for the Graphic Systems course at Universidad de Granada
+            <br>
+            <br> Created in May 2018 by:
+            <br> - David Vargas Carrillo (<a href="http://github.com/dvcarrillo">github.com/dvcarrillo</a>)
+            <br> - Andres Molina Lopez (<a href="http://github.com/Andresmag">github.com/Andresmag</a>)
+            <br>
+            <br> Project page:
+            <a href="http://github.com/Andresmag/Sistemas_Graficos">github.com/Andresmag/Sistemas_Graficos</a>
+            <br>
+            <br> Many thanks to
+            <a href="http://codepen.io/patrickhlauke/">@patrickhlauke</a> for his 'Annoying CRT retro flicker' design
+        </p>
+        <div class="level-select">
+            <select id="lvl-selection">
+                <!-- Value == number of brick lines -->
+                <option value="2">LVL 1</option>
+                <option value="4">LVL 2</option>
+                <option value="8">LVL 3</option>
+                <option value="10">LVL 4</option>
+                <option value="12">LVL 5</option>
+            </select>
+        </div>
+        <button id="button-play">PLAY</button>
+        <button id="button-info">+INFO</button>
+    </div>
+
+    <div id="game-container" class="game">
+        <!-- Div which will show several messages -->
+        <div style="position:absolute; left:100px; top:10px" id="Messages">
+        </div>
+        <!-- Div which will hold the Output -->
+        <div id="WebGL-output">
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    $("#button-info").click(function () {
+        if ($("#info-text").css("display") == "none") {
+            $("#info-text").css("display", "block");
+            $(this).html("CLOSE");
+        } else {
+            $("#info-text").css("display", "none");
+            $(this).html("+INFO");
+        }
+    });
+</script>
