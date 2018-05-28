@@ -42,6 +42,7 @@ class TheScene extends THREE.Scene {
     this.platform = null;
     this.bricks = [];
     this.ball = null;
+    // this.balls = [];
 
     this.createLights();
     this.createCamera(renderer);
@@ -116,6 +117,7 @@ class TheScene extends THREE.Scene {
     }
 
     this.ball = new Ball({});
+    // this.balls.push(this.ball);
 
     model.add(this.gameField);
     model.add(this.sky);
@@ -137,6 +139,85 @@ class TheScene extends THREE.Scene {
       const platformCollider = this.platform.getCollider();
 
       if (!this.ballPaused) {
+        // for(let ball=0; ball<this.balls.length; ball++){
+        //   this.balls[ball].moveBall(this.BALL_SPEED);
+
+        //   if (this.balls[ball].position.z > (this.platform.position.z + this.platform.depth)) {
+        //     this.model.remove(this.balls[ball]);
+        //     this.balls.splice(ball, 1);
+        //     if(this.balls.length === 0) {
+        //       this.alive = false;
+        //     }
+        //   } else {
+        //     const ballCollider = this.balls[ball].getCollider();
+        //     if (ballCollider.intersectsBox(this.platform.getCollider())) {
+        //       if (this.balls[ball].position.x > this.platform.position.x) { // The ball hits on the right side of the platform
+        //         const distance = this.balls[ball].position.x - this.platform.position.x;
+        //         const newDirection = 270 + distance / 35 * 60; // 270 is the minimum angle, 35 is the maximum distance, 60 is the maximum difference between the minumun angle and the maximum angle allow
+        //         this.balls[ball].setDirection(Math.round(newDirection));
+        //       } else if (this.balls[ball].position.x < this.platform.position.x) { // The ball hits on the left side of the platform
+        //         const distance = this.platform.position.x - this.balls[ball].position.x;
+        //         const newDirection = 270 - distance / 35 * 60;
+        //         this.balls[ball].setDirection(Math.round(newDirection));
+        //       } else { // The ball hits on the middle of the platform
+        //         this.balls[ball].setDirection(Math.round(270));
+        //       }
+        //     } else if (ballCollider.intersectsBox(this.gameField.getCollider(0))) {
+        //       this.balls[ball].calculateDirection(true);
+        //     } else if (ballCollider.intersectsBox(this.gameField.getCollider(1))) {
+        //       this.balls[ball].calculateDirection(true);
+        //     } else if (ballCollider.intersectsBox(this.gameField.getCollider(2))) {
+        //       this.balls[ball].calculateDirection();
+        //     } else {
+        //       let brickCollision = false;
+        //       let cont = this.bricks.length - 1;
+        //       while (cont >= 0 && !brickCollision) {
+        //         if (this.bricks[cont] !== undefined) {
+        //           if (ballCollider.intersectsBox(this.bricks[cont].getCollider())) {
+        //             brickCollision = true;
+        //             this.playerPoints += this.bricks[cont].points;
+        //           } else {
+        //             cont--;
+        //           }
+        //         } else {
+        //           cont--;
+        //         }
+        //       }
+
+        //       if (brickCollision) {
+        //         // console.log(`BRICK: z: (${this.bricks[cont].collider.getCenter().z - this.bricks[cont].depth/2}, ${this.bricks[cont].collider.getCenter().z + this.bricks[cont].depth/2}) BALL: z: (${this.ball.collider.min.z}, ${this.ball.collider.max.z})`)
+        //         // console.log(`BALL position z: ${this.ball.collider.getCenter().z}`);
+        //         if (this.balls[ball].collider.getCenter().z < (this.bricks[cont].collider.getCenter().z + this.bricks[cont].depth/2)  && this.balls[ball].collider.getCenter().z > (this.bricks[cont].collider.getCenter().z - this.bricks[cont].depth/2) ) {
+        //           if (this.balls[ball].position.x < this.bricks[cont].position.x &&
+        //             this.balls[ball].collider.max.x > this.bricks[cont].collider.min.x) { // The ball is at the left side of the brick and hit with it
+        //             this.balls[ball].calculateDirection(true);
+        //           } else if (this.balls[ball].position.x > this.bricks[cont].position.x &&
+        //             this.balls[ball].collider.min.x < this.bricks[cont].collider.max.x) { // The ball is at the right side of the brick and hit with it
+        //             this.balls[ball].calculateDirection(true);
+        //           }
+        //         } else {
+        //           this.balls[ball].calculateDirection();
+        //         }
+        //         this.model.remove(this.bricks[cont]);
+        //         this.bricks[cont] = undefined;
+  
+        //         cont = 0;
+        //         let empty = true;
+        //         while (cont < this.bricks.length && empty) {
+        //           if (this.bricks[cont] !== undefined) {
+        //             empty = false;
+        //           } else {
+        //             cont++;
+        //           }
+        //         }
+        //         if (empty) {
+        //           this.victory = true;
+        //         }
+        //       }
+        //     }
+        //   }
+        
+
         this.ball.moveBall(this.BALL_SPEED);
 
         if (this.ball.position.z > (this.platform.position.z + this.platform.depth)) {
@@ -254,7 +335,14 @@ class TheScene extends THREE.Scene {
   }
 
   throwBall() {
-    this.ballPaused = false;
+    if(this.ballPaused)
+      this.ballPaused = false;
+    // else {
+    //   let ball = new Ball({platformPosition: this.platform.collider.getCenter().x + this.platform.depth / 2 });
+    //   this.balls.push(ball);
+    //   this.model.add(ball);
+    //   console.log(`Balls in the field: ${this.balls.length}`)
+    // }
   }
 
 }

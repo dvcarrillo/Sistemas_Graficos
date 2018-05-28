@@ -80,7 +80,7 @@ function onMouseWheel(event) {
 function onKeyDown(event) {
   switch (event.keyCode) {
     case 32: //spacebar
-      if (requestID && scene.alive && scene.ballPaused)
+      if (requestID && scene.alive)
         scene.throwBall();
       break;
     case 80:  //key p

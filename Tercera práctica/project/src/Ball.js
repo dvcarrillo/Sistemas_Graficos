@@ -23,17 +23,19 @@ class Ball extends THREE.Object3D {
 
         this.direction = degToRad(Math.round((Math.random() * 75) + 240));
 
-        this.ball = this.createBall();
+        this.platformPosition = (parameters.platformPosition === undefined ? 0 : parameters.platformPosition)
+
+        this.ball = this.createBall(this.platformPosition);
         this.collider = null;
 
         this.add(this.ball);
     }
 
     // Creates the ball sphere
-    createBall() {
+    createBall(position_x) {
         const sphere = new THREE.Mesh(new THREE.SphereGeometry(this.radius, 32, 32), this.background);
 
-        sphere.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.radius + 10, (this.fieldWidth / 2) - 25));
+        sphere.applyMatrix(new THREE.Matrix4().makeTranslation(position_x, this.radius + 10, (this.fieldWidth / 2) - 25));
 
         sphere.castShadow = true;
         sphere.autoUpdateMatrix = false;
