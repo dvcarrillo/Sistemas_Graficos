@@ -18,7 +18,7 @@ class Platform extends THREE.Object3D {
 
         this.width = (parameters.width === undefined ? 70 : parameters.width);
         this.height = (parameters.height === undefined ? 20 : parameters.height);
-        this.depth = (parameters.depth === undefined ? 10 : parameters.depth);
+        this.depth = (parameters.depth === undefined ? 8 : parameters.depth);
         this.material = (parameters.material === undefined ? new THREE.MeshBasicMaterial({ color: 0xf2f2f2 }) : parameters.material);
         
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);

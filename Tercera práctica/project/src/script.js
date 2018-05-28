@@ -29,13 +29,9 @@ applicationMode = TheScene.NORMAL_CAMERA;
 function createGUI(withStats) {
   GUIcontrols = new function () {
     this.transform = true;
-    this.difficulty = 1;
   }
 
   var gui = new dat.GUI();
-
-  var difficultyControl = gui.addFolder('Game Difficulty');
-  difficultyControl.add(GUIcontrols, 'difficulty', 1, 3).name('Difficulty');
 
   // The method  listen()  allows the height attribute to be written, not only read
 
@@ -76,11 +72,7 @@ function setMessage(str) {
  * @param event - Mouse information
  */
 function onMouseDown(event) {
-  if (applicationMode === TheScene.NORMAL_CAMERA) {
-    scene.getCameraControls().enabled = true;
-  } else {
-    scene.getCameraControls().enabled = false;
-  }
+  scene.getCameraControls().enabled = true;
 }
 
 // It processes the wheel rolling of the mouse
@@ -88,21 +80,17 @@ function onMouseDown(event) {
  * @param event - Mouse information
  */
 function onMouseWheel(event) {
-  if (applicationMode === TheScene.NORMAL_CAMERA) {
-    scene.getCameraControls().enabled = true;
-  } else {
-    scene.getCameraControls().enabled = false;
-  }
+  scene.getCameraControls().enabled = true;
 }
 
 // It processes when the keys are pressed down
 function onKeyDown(event) {
   switch (event.keyCode) {
-    case 13: //enter
+    case 32: //spacebar
       if (requestID && scene.alive && scene.ballPaused)
         scene.throwBall();
       break;
-    case 32:  //spacebar
+    case 80:  //key p
       if (scene.alive)
         requestID ? stop() : start();
       break;
@@ -113,17 +101,6 @@ function onKeyDown(event) {
     case 39:  //right arrow
       if (requestID && scene.alive)
         scene.MOVE_RIGHT = true;
-      break;
-    case 86:  //key v
-      if (requestID && !scene.robot.isDead) {
-        if (applicationMode === TheScene.NORMAL_CAMERA) {
-          camera = scene.getEyeCamera();
-          applicationMode = TheScene.EYE_CAMERA;
-        } else {
-          camera = scene.getCamera();
-          applicationMode = TheScene.NORMAL_CAMERA;
-        }
-      }
       break;
   }
 }
@@ -164,9 +141,9 @@ function createRenderer() {
 function render() {
   requestID = undefined;
 
-  stats.update();
+  //stats.update();
   scene.getCameraControls().update();
-  scene.animate(GUIcontrols);
+  scene.animate();
 
   renderer.render(scene, camera);
 
@@ -227,7 +204,7 @@ $(function () {
     scene = new TheScene(renderer.domElement, difficulty);
     camera = scene.getCamera();
     requestID = undefined;
-    createGUI(true);
+    //createGUI(true);
     // Hide start screen elements
     $("#info-text").css("display", "none");
     $("#game-title-screen").css("display", "none");

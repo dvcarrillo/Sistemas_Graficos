@@ -21,7 +21,7 @@ class Ball extends THREE.Object3D {
 
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
-        this.direction = degToRad((Math.random() * 75) + 240);
+        this.direction = degToRad(Math.round((Math.random() * 75) + 240));
 
         this.ball = this.createBall();
         this.collider = null;
@@ -34,12 +34,9 @@ class Ball extends THREE.Object3D {
     createBall() {
         const sphere = new THREE.Mesh(new THREE.SphereGeometry(this.radius, 32, 32), this.background);
 
-        sphere.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.radius + 10, (this.fieldWidth / 2) - 30));
-        //10 = platform.height * 1.5 - platform.height
-        //30 = platform.depth * 1.5
+        sphere.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.radius + 10, (this.fieldWidth / 2) - 25));
 
         sphere.castShadow = true;
-        // sphere.receiveShadow = true;
         sphere.autoUpdateMatrix = false;
 
         // console.log(`BALL x: ${sphere.position.x} y: ${sphere.position.y} z: ${sphere.position.z} radius: ${this.radius}`)

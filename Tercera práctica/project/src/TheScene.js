@@ -130,8 +130,7 @@ class TheScene extends THREE.Scene {
    * @controls - The GUI information
    */
   animate(controls) {
-    this.axis.visible = true;
-    this.setDifficulty(controls.difficulty);
+    this.axis.visible = false;
 
     if (this.alive) {
       this.movePlatform();
@@ -140,7 +139,7 @@ class TheScene extends THREE.Scene {
       if (!this.ballPaused) {
         this.ball.moveBall(this.BALL_SPEED);
 
-        if (this.ball.position.z > 4 * (this.platform.position.z + this.platform.depth / 2)) {
+        if (this.ball.position.z > (this.platform.position.z + this.platform.depth)) {
           this.alive = false;
         } else {
           const ballCollider = this.ball.getCollider();
@@ -188,12 +187,12 @@ class TheScene extends THREE.Scene {
               console.log(`BALL position z: ${this.ball.collider.getCenter().z}`);
               if (this.ball.collider.getCenter().z < this.bricks[cont].collider.max.z && this.ball.collider.getCenter().z > this.bricks[cont].collider.min.z) {
                 console.log("ENTRA EN CHOQUE LATERAL");
-                if (this.ball.position.x < this.bricks[cont].position.x && 
+                if (this.ball.position.x < this.bricks[cont].position.x &&
                   this.ball.collider.max.x > this.bricks[cont].collider.min.x) { // The ball is at the left side of the brick and hit with it
                   console.log("ENTRA EN CHOQUE IZQUIERDO");
                   this.ball.calculateDirection(true);
                 } else if (this.ball.position.x > this.bricks[cont].position.x &&
-                   this.ball.collider.min.x < this.bricks[cont].collider.max.x) { // The ball is at the right side of the brick and hit with it
+                  this.ball.collider.min.x < this.bricks[cont].collider.max.x) { // The ball is at the right side of the brick and hit with it
                   console.log("ENTRA EN CHOQUE DERECHO");
                   this.ball.calculateDirection(true);
                 }
@@ -263,35 +262,8 @@ class TheScene extends THREE.Scene {
     }
   }
 
-  // Sets the game difficulty
-  setDifficulty(level) {
-    level = Math.floor(level);
-  }
-
   throwBall() {
     this.ballPaused = false;
-  }
-
-  setKeyDown(key) {
-    switch (key) {
-      case "left":
-        this.LEFT_KEY_DOWN = true;
-        break;
-      case "right":
-        this.RIGHT_KEY_DOWN = true;
-        break;
-    }
-  }
-
-  setKeyUp(key) {
-    switch (key) {
-      case "left":
-        this.LEFT_KEY_DOWN = false;
-        break;
-      case "right":
-        this.RIGHT_KEY_DOWN = false;
-        break;
-    }
   }
 
 }
@@ -300,4 +272,3 @@ class TheScene extends THREE.Scene {
 
 // Application modes
 TheScene.NORMAL_CAMERA = 0;
-TheScene.EYE_CAMERA = 1;
