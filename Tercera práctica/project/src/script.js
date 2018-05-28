@@ -148,7 +148,6 @@ function render() {
     if (this.scene.endTime !== null){
       const now = Date.now();
       if (now < this.scene.endTime){
-        console.log((this.scene.endTime - now)/1000 + " seconds left");
         this.setMessage(Math.floor((this.scene.endTime - now)/1000) + " seconds left");
         start();
       } else {
