@@ -17,7 +17,7 @@ class Ball extends THREE.Object3D {
 
         // Parameters
         this.radius = (parameters.radius === undefined ? 5 : parameters.background);
-        this.background = (parameters.background === undefined ? new THREE.MeshBasicMaterial({ color: 0xff3333 }) : parameters.background);
+        this.background = (parameters.background === undefined ? new THREE.MeshPhongMaterial({ color: 0xff3333 }) : parameters.background);
 
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
