@@ -26,9 +26,6 @@ class TheScene extends THREE.Scene {
     // Current difficulty
     this.endTime = null;
     this.difficulty = difficulty;
-    if (this.difficulty === "6") {
-      this.endTime = Date.now() + 140000;
-    }
 
     // Current player points
     this.playerPoints = 0;
@@ -343,6 +340,9 @@ class TheScene extends THREE.Scene {
 
   throwBall() {
     this.ballPaused = false;
+    if (this.difficulty === "6" && this.endTime === null) {
+      this.endTime = Date.now() + 140000;
+    }
   }
 }
 

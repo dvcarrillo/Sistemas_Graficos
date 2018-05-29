@@ -12,6 +12,8 @@
 scene = null;
 camera = null;
 requestID = null;
+time = null;
+savedTime = null;
 
 // The object for the statistics
 stats = null;
@@ -88,15 +90,15 @@ function onKeyDown(event) {
       break;
     case 80:  //key p
       if (scene.alive)
-        requestID ? stop() : start();
+        requestID ? stop() : start(true);
       break;
     case 37:  //left arrow
-    case 65:
+    case 65:  // key a
       if (requestID && scene.alive)
         scene.MOVE_LEFT = true;
       break;
     case 39:  //right arrow
-    case 68:
+    case 68:  //key d
       if (requestID && scene.alive)
         scene.MOVE_RIGHT = true;
       break;
@@ -107,12 +109,12 @@ function onKeyDown(event) {
 function onKeyUp(event) {
   switch (event.keyCode) {
     case 37:  //left arrow
-    case 65:
+    case 65:  //key a
       if (requestID && scene.alive)
         scene.MOVE_LEFT = false;
       break;
     case 39:  //right arrow
-    case 68:
+    case 68:  //key d
       if (requestID && scene.alive)
         scene.MOVE_RIGHT = false;
       break;
@@ -149,9 +151,9 @@ function render() {
 
   if (this.scene.alive && !this.scene.victory){
     if (this.scene.endTime !== null){
-      const now = Date.now();
-      if (now < this.scene.endTime){
-        this.setMessage(Math.floor((this.scene.endTime - now)/1000) + " sec. left");
+      time = Date.now();
+      if (time < this.scene.endTime){
+        this.setMessage(Math.floor((this.scene.endTime - time)/1000) + " sec. left");
         start();
       } else {
         $("#screen-title").html("DEFEAT");
@@ -186,9 +188,12 @@ function render() {
 }
 
 // It starts the render
-function start() {
+function start(paused) {
   if (!requestID) {
     requestID = requestAnimationFrame(render);
+  }
+  if (paused && this.scene.endTime !== null) {
+    this.scene.endTime += Date.now() - savedTime;
   }
 }
 
@@ -197,6 +202,9 @@ function stop() {
   if (requestID) {
     cancelAnimationFrame(requestID);
     requestID = undefined;
+  }
+  if (this.scene.endTime !== null) {
+    savedTime = time;
   }
 }
 
