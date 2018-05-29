@@ -16,8 +16,8 @@ class Ball extends THREE.Object3D {
         super();
 
         // Parameters
-        this.radius = (parameters.radius === undefined ? 5 : parameters.background);
-        this.background = (parameters.background === undefined ? new THREE.MeshPhongMaterial({ color: 0xff3333 }) : parameters.background);
+        this.radius = (parameters.radius === undefined ? 5 : parameters.radius);
+        this.material = (parameters.material === undefined ? new THREE.MeshPhongMaterial({ color: 0xff3333 }) : parameters.material);
 
         this.fieldWidth = (parameters.fieldWidth === undefined ? 400 : parameters.fieldWidth);
 
@@ -31,7 +31,7 @@ class Ball extends THREE.Object3D {
 
     // Creates the ball sphere
     createBall() {
-        const sphere = new THREE.Mesh(new THREE.SphereGeometry(this.radius, 32, 32), this.background);
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(this.radius, 32, 32), this.material);
 
         sphere.applyMatrix(new THREE.Matrix4().makeTranslation(0, this.radius + 10, (this.fieldWidth / 2) - 25));
 
