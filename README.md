@@ -1,5 +1,5 @@
 # Web Graphics
-This repository contains three projects made with JavaScript and Three.js for the Sistemas Gráficos subject at Universidad de Granada. Each project is in a different folder.
+This repository contains three projects made with JavaScript and Three.js for the Sistemas Gráficos course at Universidad de Granada. Each project is in a different folder.
 
 ## Project specification
 - **[Práctica 1 - live version](https://dvcarrillo.github.io/web-graphics/Primera%20práctica/practicasThreeSG/grua/index.html):** sandbox where we investigated the basics of Three.js
