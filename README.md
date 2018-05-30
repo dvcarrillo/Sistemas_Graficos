@@ -7,5 +7,5 @@ This repository contains three projects made with JavaScript and Three.js for th
 - **[Práctica 3 - Arkanoid 3D](https://dvcarrillo.github.io/web-graphics/Tercera%20práctica/project/src/index.html):** the final project of the subject, where we made a 3D remake of the classic Arkanoid, that sums up what we have learnt in this subject
 
 All these projects have been created by:
-- David Vargas Carrillo // [@dvcarrillo](https://github.com/dvcarrillo)
-- Andrés Molina López // [@Andresmag](https://github.com/Andresmag)
+- David Vargas Carrillo ([@dvcarrillo](https://github.com/dvcarrillo))
+- Andrés Molina López ([@Andresmag](https://github.com/Andresmag))
